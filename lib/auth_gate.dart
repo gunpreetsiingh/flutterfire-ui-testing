@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui_testing/dashboard.dart';
+import 'package:flutterfire_ui_testing/dashboard_admin.dart';
 
 class AuthGate extends StatelessWidget {
   const AuthGate({Key? key}) : super(key: key);
@@ -22,6 +23,8 @@ class AuthGate extends StatelessWidget {
                   ],
                 );
               }
+              if (FirebaseAuth.instance.currentUser!.email ==
+                  'qg.rickfeed@gmail.com') return const DashboardAdmin();
               return const Dashboard();
             },
           );

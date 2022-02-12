@@ -1,4 +1,4 @@
-package com.example.flutterfire_ui_testing
+package com.rickfeed.chicks
 
 import io.flutter.embedding.android.FlutterActivity
 

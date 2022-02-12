@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "505634373554",
-    "project_id": "flutterfire-ui-testing",
-    "storage_bucket": "flutterfire-ui-testing.appspot.com"
+    "project_number": "128315909385",
+    "project_id": "rickfeed-chicks",
+    "storage_bucket": "rickfeed-chicks.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:505634373554:android:c49472d07124ba16672eab",
+        "mobilesdk_app_id": "1:128315909385:android:7832866fa0c78d76d5dfd8",
         "android_client_info": {
-          "package_name": "com.example.flutterfire_ui_testing"
+          "package_name": "com.rickfeed.chicks"
         }
       },
       "oauth_client": [
         {
-          "client_id": "505634373554-ovu5c7aohmp76lv3fdou4euqrlkp5o9b.apps.googleusercontent.com",
+          "client_id": "128315909385-m02nlfqsurbeehmq6s918d7h0vac6nra.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDFba1sLefgjhtd3GaeVragJaKwvwfJVuo"
+          "current_key": "AIzaSyBRGIga_ZmscJgN6gq9ONrkb6q6ylUvrgw"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "505634373554-ovu5c7aohmp76lv3fdou4euqrlkp5o9b.apps.googleusercontent.com",
+              "client_id": "128315909385-m02nlfqsurbeehmq6s918d7h0vac6nra.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

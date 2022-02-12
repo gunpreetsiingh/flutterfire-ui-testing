@@ -1,14 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterfire_ui_testing/dashboard_widgets.dart';
 
-class Dashboard extends StatefulWidget {
-  const Dashboard({Key? key}) : super(key: key);
+class DashboardAdmin extends StatefulWidget {
+  const DashboardAdmin({Key? key}) : super(key: key);
 
   @override
-  _DashboardState createState() => _DashboardState();
+  _DashboardAdminState createState() => _DashboardAdminState();
 }
 
-class _DashboardState extends State<Dashboard> {
+class _DashboardAdminState extends State<DashboardAdmin> {
   var txtName = TextEditingController();
 
   @override
@@ -90,7 +91,7 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Employee Dashboard'),
+        title: const Text('Admin Dashboard'),
         actions: [
           TextButton(
             onPressed: confirmSignOut,
@@ -102,20 +103,18 @@ class _DashboardState extends State<Dashboard> {
         ],
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              FirebaseAuth.instance.currentUser!.email!,
-              style: const TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 20,
-              ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: const [
+                SizedBox(height: 10),
+                DashboardWidgets()
+              ],
             ),
-            const SizedBox(
-              height: 15,
-            ),
-          ],
+          ),
         ),
       ),
     );
