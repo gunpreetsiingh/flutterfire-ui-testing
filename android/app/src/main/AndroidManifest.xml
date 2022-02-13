@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.rickfeed.chicks">
    <application
-        android:label="flutterfire_ui_testing"
+        android:label="Rickfeed"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
