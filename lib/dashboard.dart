@@ -295,136 +295,145 @@ class _DashboardState extends State<Dashboard> {
                       child: ListView.builder(
                         itemCount: colFarmers.docs.length,
                         itemBuilder: (context, index) {
-                          return Container(
-                            margin: const EdgeInsets.only(top: 10),
-                            padding: const EdgeInsets.symmetric(vertical: 5),
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.15),
-                                    blurRadius: 5,
-                                    spreadRadius: 5,
-                                  )
-                                ]),
-                            child: ListTile(
-                              onLongPress: () {
-                                showEditOptions(index);
-                              },
-                              leading: GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => ViewImage(
-                                          colFarmers.docs[index]['image'])));
+                          if (colFarmers.docs[index]['employee'] ==
+                              FirebaseAuth.instance.currentUser!.displayName)
+                            return Container(
+                              margin: const EdgeInsets.only(top: 10),
+                              padding: const EdgeInsets.symmetric(vertical: 5),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.15),
+                                      blurRadius: 5,
+                                      spreadRadius: 5,
+                                    )
+                                  ]),
+                              child: ListTile(
+                                onLongPress: () {
+                                  showEditOptions(index);
                                 },
-                                child: SizedBox(
-                                  height: 65,
-                                  width: 65,
-                                  child: CircleAvatar(
-                                    radius: 50,
-                                    backgroundImage:
-                                        const AssetImage('assets/profile.jpeg'),
-                                    foregroundImage: NetworkImage(
-                                        colFarmers.docs[index]['image']),
+                                leading: GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) => ViewImage(
+                                                colFarmers.docs[index]
+                                                    ['image'])));
+                                  },
+                                  child: SizedBox(
+                                    height: 65,
+                                    width: 65,
+                                    child: CircleAvatar(
+                                      radius: 50,
+                                      backgroundImage: const AssetImage(
+                                          'assets/profile.jpeg'),
+                                      foregroundImage: NetworkImage(
+                                          colFarmers.docs[index]['image']),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              title: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    'Name: ${colFarmers.docs[index]['name']}',
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    'Number: ${colFarmers.docs[index]['number']}',
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    'Email: ${colFarmers.docs[index]['email']}',
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    'Location: ${colFarmers.docs[index]['location']}',
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  Visibility(
-                                    visible: colFarmers.docs[index]['attended'],
-                                    child: const SizedBox(
-                                      height: 5,
-                                    ),
-                                  ),
-                                  Visibility(
-                                    visible: colFarmers.docs[index]['attended'],
-                                    child: Text(
-                                      'Notes: ${colFarmers.docs[index]['attended'] ? colFarmers.docs[index]['notes'] : ''}',
+                                title: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      'Name: ${colFarmers.docs[index]['name']}',
                                       style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.grey,
                                       ),
                                     ),
-                                  ),
-                                  Visibility(
-                                    visible: colFarmers.docs[index]['attended'],
-                                    child: const SizedBox(
+                                    const SizedBox(
                                       height: 5,
                                     ),
-                                  ),
-                                  Visibility(
-                                    visible: colFarmers.docs[index]['attended'],
-                                    child: Text(
-                                      'Timestamp: ${DateFormat('dd MMM, yyyy hh:mm:ss a').format(DateTime.parse(colFarmers.docs[index]['attended'] ? colFarmers.docs[index]['timestamp'] : DateTime.now().toString()))}',
+                                    Text(
+                                      'Number: ${colFarmers.docs[index]['number']}',
                                       style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.grey,
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              trailing: colFarmers.docs[index]['attended']
-                                  ? const Icon(
-                                      Icons.done_rounded,
-                                      color: Colors.green,
-                                      size: 30,
-                                    )
-                                  : const Icon(
-                                      Icons.warning_amber_rounded,
-                                      color: Colors.amber,
-                                      size: 30,
+                                    const SizedBox(
+                                      height: 5,
                                     ),
-                            ),
-                          );
+                                    Text(
+                                      'Email: ${colFarmers.docs[index]['email']}',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      'Location: ${colFarmers.docs[index]['location']}',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    Visibility(
+                                      visible: colFarmers.docs[index]
+                                          ['attended'],
+                                      child: const SizedBox(
+                                        height: 5,
+                                      ),
+                                    ),
+                                    Visibility(
+                                      visible: colFarmers.docs[index]
+                                          ['attended'],
+                                      child: Text(
+                                        'Notes: ${colFarmers.docs[index]['attended'] ? colFarmers.docs[index]['notes'] : ''}',
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ),
+                                    Visibility(
+                                      visible: colFarmers.docs[index]
+                                          ['attended'],
+                                      child: const SizedBox(
+                                        height: 5,
+                                      ),
+                                    ),
+                                    Visibility(
+                                      visible: colFarmers.docs[index]
+                                          ['attended'],
+                                      child: Text(
+                                        'Timestamp: ${DateFormat('dd MMM, yyyy hh:mm:ss a').format(DateTime.parse(colFarmers.docs[index]['attended'] ? colFarmers.docs[index]['timestamp'] : DateTime.now().toString()))}',
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                trailing: colFarmers.docs[index]['attended']
+                                    ? const Icon(
+                                        Icons.done_rounded,
+                                        color: Colors.green,
+                                        size: 30,
+                                      )
+                                    : const Icon(
+                                        Icons.warning_amber_rounded,
+                                        color: Colors.amber,
+                                        size: 30,
+                                      ),
+                              ),
+                            );
+                          return Container();
                         },
                       ),
                     ),

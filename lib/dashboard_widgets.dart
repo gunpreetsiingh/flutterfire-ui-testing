@@ -26,11 +26,18 @@ class _DashboardWidgetsState extends State<DashboardWidgets> {
     setState(() {
       loadingData = true;
     });
-    colFarmers = await FirebaseFirestore.instance.collection('farmers').orderBy('name').get();
-    colEmployees =
-        await FirebaseFirestore.instance.collection('employees').orderBy('name').get();
+    colFarmers = await FirebaseFirestore.instance
+        .collection('farmers')
+        .orderBy('name')
+        .get();
+    colEmployees = await FirebaseFirestore.instance
+        .collection('employees')
+        .orderBy('name')
+        .get();
     // employees.add('Select employee');
     // employeesToken.add('Select employee token');
+    employees.clear();
+    employeesToken.clear();
     colEmployees.docs.forEach(
       (element) {
         employees.add(element['name']);
