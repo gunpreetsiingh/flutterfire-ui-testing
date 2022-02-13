@@ -77,6 +77,7 @@ class _DashboardAdminState extends State<DashboardAdmin> {
             ),
             TextButton(
               onPressed: () {
+                Navigator.of(context).pop();
                 FirebaseAuth.instance.signOut();
               },
               child: const Text('Confirm'),
@@ -93,27 +94,31 @@ class _DashboardAdminState extends State<DashboardAdmin> {
       appBar: AppBar(
         title: const Text('Admin Dashboard'),
         actions: [
-          TextButton(
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const DashboardAdmin()));
+            },
+            icon: const Icon(
+              Icons.refresh_outlined,
+              color: Colors.white,
+            ),
+          ),
+          IconButton(
             onPressed: confirmSignOut,
-            child: const Icon(
+            icon: const Icon(
               Icons.logout_outlined,
               color: Colors.white,
             ),
           ),
         ],
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
-                SizedBox(height: 10),
-                DashboardWidgets()
-              ],
-            ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: const [SizedBox(height: 10), DashboardWidgets()],
           ),
         ),
       ),
