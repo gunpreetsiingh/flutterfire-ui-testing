@@ -62,6 +62,17 @@ class _EmployeeListViewState extends State<EmployeeListView> {
                 height: 10,
               ),
               Text(
+                'Code: ${colEmployees.docs[index]['code']}',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
                 'Name: ${colEmployees.docs[index]['name']}',
                 style: const TextStyle(
                   fontSize: 16,

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -20,7 +21,7 @@ class _DashboardState extends State<Dashboard> {
   var txtName = TextEditingController();
   var txtNumber = TextEditingController();
   var txtNotes = TextEditingController();
-  String tokenId = '';
+  String tokenId = '', code = '';
   bool isLoading = true;
   late QuerySnapshot colFarmers;
   String imageUrl = '';
@@ -61,7 +62,15 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
+  String generateRandomCode() {
+    int num = Random().nextInt(10000);
+    return num.toString();
+  }
+
   void confirmName() async {
+    setState(() {
+      code = 'E' + generateRandomCode();
+    });
     await showDialog(
       context: context,
       builder: (context) {
@@ -95,6 +104,7 @@ class _DashboardState extends State<Dashboard> {
                       .updateDisplayName(txtName.text);
                   await FirebaseFirestore.instance.collection('employees').add(
                     {
+                      'code': code,
                       'name': txtName.text,
                       'number': txtNumber.text,
                       'image': '',
@@ -148,11 +158,11 @@ class _DashboardState extends State<Dashboard> {
       setState(() {
         _imageFile = File(pickedFile.path);
       });
-      uploadImageToFirebase(context);
+      uploadImageToFirebase();
     }
   }
 
-  Future uploadImageToFirebase(BuildContext context) async {
+  Future uploadImageToFirebase() async {
     String fileName = _imageFile.path.substring(
         _imageFile.path.lastIndexOf('/') + 1, _imageFile.path.length);
     Reference firebaseStorageRef =

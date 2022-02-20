@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterfire_ui_testing/farmer_data_model.dart';
 import 'package:flutterfire_ui_testing/main.dart';
+import 'package:flutterfire_ui_testing/new_farmer.dart';
 import 'package:flutterfire_ui_testing/view_image.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:intl/intl.dart';
@@ -14,15 +16,9 @@ class FarmersListView extends StatefulWidget {
 }
 
 class _FarmersListViewState extends State<FarmersListView> {
-  var txtName = TextEditingController();
-  var txtNumber = TextEditingController();
-  var txtEmail = TextEditingController();
-  var txtLocation = TextEditingController();
-
   late QuerySnapshot colFarmers;
   bool isLoading = true, edit = false;
-  String docId = '';
-  String dropDownValue = '';
+  String docId = '', employee = '';
 
   @override
   void initState() {
@@ -61,10 +57,32 @@ class _FarmersListViewState extends State<FarmersListView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              CircleAvatar(
-                radius: 50,
-                backgroundImage: const AssetImage('assets/profile.jpeg'),
-                foregroundImage: NetworkImage(colFarmers.docs[index]['image']),
+              Visibility(
+                visible: colFarmers.docs[index]['images'].isNotEmpty,
+                child: Row(
+                  children: [
+                    for (int i = 0;
+                        i <= colFarmers.docs[index]['images'].length;
+                        i++)
+                      CircleAvatar(
+                        radius: 50,
+                        backgroundImage: const AssetImage('assets/profile.jpeg'),
+                        foregroundImage:
+                            NetworkImage(colFarmers.docs[index]['images'][i]),
+                      ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
+                'Code: ${colFarmers.docs[index]['code']}',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
               ),
               const SizedBox(
                 height: 10,
@@ -114,13 +132,185 @@ class _FarmersListViewState extends State<FarmersListView> {
                 height: 10,
               ),
               Text(
-                'Employee: ${colFarmers.docs[index]['employee']}',
+                'Employee: ${colFarmers.docs[index]['employeeCode']}',
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Colors.grey,
                 ),
               ),
+              const Divider(),
+              Row(
+                children: [
+                  Visibility(
+                    visible: colFarmers.docs[index]['panId'].isNotEmpty,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>
+                                ViewImage(colFarmers.docs[index]['panId'])));
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          colFarmers.docs[index]['panId'],
+                          fit: BoxFit.cover,
+                          height: 50,
+                          width: 50,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    'Pan No: ${colFarmers.docs[index]['panNo']}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  Visibility(
+                    visible: colFarmers.docs[index]['aadhaarId'].isNotEmpty,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => ViewImage(
+                                colFarmers.docs[index]['aadhaarId'])));
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          colFarmers.docs[index]['aadhaarId'],
+                          fit: BoxFit.cover,
+                          height: 50,
+                          width: 50,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    'Aadhaar No: ${colFarmers.docs[index]['aadhaarNo']}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
+                'Current Batch: ${colFarmers.docs[index]['currentBatch']}',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
+                'From Date: ${colFarmers.docs[index]['fromDate']}',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
+                'To Date: ${colFarmers.docs[index]['toDate']}',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
+                'Batch Effective On: ${colFarmers.docs[index]['batchEffectiveOn']}',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
+                'Total Quantity Allotted: ${colFarmers.docs[index]['totalQtyAllotted']}',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
+                'Loss Quantity Till Date: ${colFarmers.docs[index]['lossQtyTillDate']}',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
+                'Bank Account Number: ${colFarmers.docs[index]['bankAccNumber']}',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
+                'Bank Name: ${colFarmers.docs[index]['bankName']}',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
+                'Bank IFSC Code: ${colFarmers.docs[index]['bankIfscCode']}',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
+              ),
+              const Divider(),
               Visibility(
                 visible: colFarmers.docs[index]['attended'],
                 child: const SizedBox(
@@ -165,14 +355,45 @@ class _FarmersListViewState extends State<FarmersListView> {
                 onTap: () {
                   Navigator.of(context).pop();
                   setState(() {
-                    edit = true;
                     docId = colFarmers.docs[index].id;
-                    txtName.text = colFarmers.docs[index]['name'];
-                    txtNumber.text = colFarmers.docs[index]['number'];
-                    txtEmail.text = colFarmers.docs[index]['email'];
-                    txtLocation.text = colFarmers.docs[index]['location'];
-                    dropDownValue = colFarmers.docs[index]['employee'];
-                    showFarmerDialog();
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => NewFarmer(
+                          true,
+                          docId,
+                          FarmerDataModel(
+                            code: colFarmers.docs[index]['code'],
+                            images: colFarmers.docs[index]['images'],
+                            name: colFarmers.docs[index]['name'],
+                            number: colFarmers.docs[index]['number'],
+                            email: colFarmers.docs[index]['email'],
+                            location: colFarmers.docs[index]['location'],
+                            panNo: colFarmers.docs[index]['panNo'],
+                            aadhaarNo: colFarmers.docs[index]['aadhaarNo'],
+                            panId: colFarmers.docs[index]['panId'],
+                            aadhaarId: colFarmers.docs[index]['aadhaarId'],
+                            employeeCode: colFarmers.docs[index]
+                                ['employeeCode'],
+                            currentBatch: colFarmers.docs[index]
+                                ['currentBatch'],
+                            fromDate: colFarmers.docs[index]['fromDate'],
+                            toDate: colFarmers.docs[index]['toDate'],
+                            batchEffectiveOn: colFarmers.docs[index]
+                                ['batchEffectiveOn'],
+                            totalQtyAllotted: colFarmers.docs[index]
+                                ['totalQtyAllotted'],
+                            lossQtyTillDate: colFarmers.docs[index]
+                                ['lossQtyTillDate'],
+                            attended: colFarmers.docs[index]['attended'],
+                            bankAccNumber: colFarmers.docs[index]
+                                ['bankAccNumber'],
+                            bankName: colFarmers.docs[index]['bankName'],
+                            bankIfscCode: colFarmers.docs[index]
+                                ['bankIfscCode'],
+                          ),
+                        ),
+                      ),
+                    );
                   });
                 },
                 leading: Icon(
@@ -195,107 +416,6 @@ class _FarmersListViewState extends State<FarmersListView> {
     );
   }
 
-  void showFarmerDialog() async {
-    await showDialog(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(builder: (context, setState) {
-          return AlertDialog(
-            title: Text(edit ? 'Edit farmer details' : 'Enter farmer details'),
-            content: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    controller: txtName,
-                    decoration: const InputDecoration(hintText: 'Enter name*'),
-                  ),
-                  TextField(
-                    controller: txtNumber,
-                    decoration:
-                        const InputDecoration(hintText: 'Enter mobile number*'),
-                  ),
-                  TextField(
-                    controller: txtEmail,
-                    decoration: const InputDecoration(hintText: 'Enter email'),
-                  ),
-                  TextField(
-                    controller: txtLocation,
-                    decoration:
-                        const InputDecoration(hintText: 'Enter location'),
-                  ),
-                  DropdownButton<String>(
-                    hint: const Text('Select employee'),
-                    value: dropDownValue == '' ? null : dropDownValue,
-                    isExpanded: true,
-                    icon: const Icon(Icons.arrow_downward),
-                    elevation: 16,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        dropDownValue = newValue!;
-                      });
-                    },
-                    items:
-                        employees.map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                ],
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () async {
-                  if (txtName.text.isNotEmpty) {
-                    if (txtNumber.text.isNotEmpty) {
-                      if (dropDownValue != 'Select employee') {
-                        FirebaseFirestore.instance
-                            .collection('farmers')
-                            .doc(edit ? docId : null)
-                            .set(
-                          {
-                            'name': txtName.text,
-                            'image': '',
-                            'number': txtNumber.text,
-                            'email': txtEmail.text,
-                            'location': txtLocation.text,
-                            'employee': dropDownValue,
-                            'attended': false,
-                          },
-                        );
-                        OSCreateNotification notification =
-                            OSCreateNotification(
-                          playerIds: [
-                            employeesToken[employees.indexOf(dropDownValue)]
-                          ],
-                          content: 'You have been assigned a new farmer.',
-                          subtitle: 'Please open the app to view details.',
-                        );
-                        await OneSignal.shared.postNotification(notification);
-                      }
-                    }
-                  }
-                  Navigator.of(context).pop();
-                  loadData();
-                },
-                child: const Text('Confirm'),
-              ),
-            ],
-          );
-        });
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -306,10 +426,8 @@ class _FarmersListViewState extends State<FarmersListView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          setState(() {
-            edit = false;
-          });
-          showFarmerDialog();
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => NewFarmer(false, '', FarmerDataModel())));
         },
         child: const Icon(
           Icons.person_add_alt_1_outlined,
@@ -345,6 +463,12 @@ class _FarmersListViewState extends State<FarmersListView> {
                             colFarmers.docs[index]['attended']) {
                           return Container();
                         }
+                        employees.forEach((element) {
+                          if (element.startsWith(
+                              colFarmers.docs[index]['employeeCode'])) {
+                            employee = element;
+                          }
+                        });
                         return Container(
                           margin: const EdgeInsets.only(top: 10),
                           padding: const EdgeInsets.symmetric(vertical: 5),
@@ -365,8 +489,9 @@ class _FarmersListViewState extends State<FarmersListView> {
                             leading: GestureDetector(
                               onTap: () {
                                 Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => ViewImage(
-                                        colFarmers.docs[index]['image'])));
+                                    builder: (context) => ViewImage(colFarmers
+                                        .docs[index]['images']
+                                        .toString())));
                               },
                               child: SizedBox(
                                 height: 65,
@@ -375,8 +500,9 @@ class _FarmersListViewState extends State<FarmersListView> {
                                   radius: 50,
                                   backgroundImage:
                                       const AssetImage('assets/profile.jpeg'),
-                                  foregroundImage: NetworkImage(
-                                      colFarmers.docs[index]['image']),
+                                  foregroundImage: NetworkImage(colFarmers
+                                      .docs[index]['images']
+                                      .toString()),
                                 ),
                               ),
                             ),
@@ -408,7 +534,7 @@ class _FarmersListViewState extends State<FarmersListView> {
                                   height: 5,
                                 ),
                                 Text(
-                                  'Employee: ${colFarmers.docs[index]['employee']}',
+                                  'Employee: $employee',
                                   style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,

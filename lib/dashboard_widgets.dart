@@ -40,7 +40,7 @@ class _DashboardWidgetsState extends State<DashboardWidgets> {
     employeesToken.clear();
     colEmployees.docs.forEach(
       (element) {
-        employees.add(element['name']);
+        employees.add(element['code'] + '-' + element['name']);
         employeesToken.add(element['token']);
       },
     );
