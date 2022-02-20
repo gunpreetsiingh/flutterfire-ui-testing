@@ -21,10 +21,12 @@ class _DashboardState extends State<Dashboard> {
   var txtName = TextEditingController();
   var txtNumber = TextEditingController();
   var txtNotes = TextEditingController();
+  var txtLossQty = TextEditingController();
+  var txtReason = TextEditingController();
   String tokenId = '', code = '';
   bool isLoading = true;
-  late QuerySnapshot colFarmers;
-  String imageUrl = '';
+  late QuerySnapshot colFarmers, colEmployee;
+  String imageUrl = '', employeeCode = '';
 
   final FirebaseStorage _storage = FirebaseStorage.instance;
   late File _imageFile;
@@ -45,7 +47,12 @@ class _DashboardState extends State<Dashboard> {
         .collection('farmers')
         .orderBy('name')
         .get();
+    colEmployee = await FirebaseFirestore.instance
+        .collection('employees')
+        .where('email', isEqualTo: FirebaseAuth.instance.currentUser!.email)
+        .get();
     setState(() {
+      employeeCode = colEmployee.docs.first['code'];
       isLoading = false;
     });
   }
@@ -200,9 +207,7 @@ class _DashboardState extends State<Dashboard> {
                 CircleAvatar(
                   radius: 50,
                   backgroundImage: const AssetImage('assets/profile.jpeg'),
-                  foregroundImage: NetworkImage(imageUrl != ''
-                      ? imageUrl
-                      : colFarmers.docs[index]['image']),
+                  foregroundImage: NetworkImage(imageUrl != '' ? imageUrl : ''),
                 ),
                 const SizedBox(
                   height: 10,
@@ -217,6 +222,22 @@ class _DashboardState extends State<Dashboard> {
                   height: 10,
                 ),
                 TextField(
+                  controller: txtLossQty,
+                  decoration: const InputDecoration(
+                      hintText: 'Enter loss qty till date'),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                TextField(
+                  controller: txtReason,
+                  decoration: const InputDecoration(
+                      hintText: 'Enter reason for loss qty'),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                TextField(
                   controller: txtNotes,
                   decoration: const InputDecoration(hintText: 'Enter notes'),
                 ),
@@ -226,22 +247,23 @@ class _DashboardState extends State<Dashboard> {
                 ListTile(
                   onTap: () {
                     Navigator.of(context).pop();
-                    if (imageUrl != '') {
-                      FirebaseFirestore.instance
-                          .collection('farmers')
-                          .doc(colFarmers.docs[index].id)
-                          .update(
-                        {
-                          'image': imageUrl,
-                          'attended': true,
-                          'notes': txtNotes.text,
-                          'timestamp': DateTime.now().toString(),
-                        },
-                      );
-                    }
+                    FirebaseFirestore.instance
+                        .collection('farmers')
+                        .doc(colFarmers.docs[index].id)
+                        .update(
+                      {
+                        'images': [imageUrl],
+                        'attended': true,
+                        'lossQtyTillDate': txtLossQty.text,
+                        'reason': txtReason.text,
+                        'notes': txtNotes.text,
+                        'timestamp': DateTime.now().toString(),
+                      },
+                    );
                     setState(() {
                       imageUrl = '';
                     });
+                    loadData();
                   },
                   leading: Icon(
                     Icons.done_rounded,
@@ -305,8 +327,8 @@ class _DashboardState extends State<Dashboard> {
                       child: ListView.builder(
                         itemCount: colFarmers.docs.length,
                         itemBuilder: (context, index) {
-                          if (colFarmers.docs[index]['employee'] ==
-                              FirebaseAuth.instance.currentUser!.displayName)
+                          if (colFarmers.docs[index]['employeeCode'] ==
+                              employeeCode && !colFarmers.docs[index]['attended']) {
                             return Container(
                               margin: const EdgeInsets.only(top: 10),
                               padding: const EdgeInsets.symmetric(vertical: 5),
@@ -339,8 +361,11 @@ class _DashboardState extends State<Dashboard> {
                                       radius: 50,
                                       backgroundImage: const AssetImage(
                                           'assets/profile.jpeg'),
-                                      foregroundImage: NetworkImage(
-                                          colFarmers.docs[index]['image']),
+                                      foregroundImage: NetworkImage(colFarmers
+                                              .docs[index]['images'].isEmpty
+                                          ? ''
+                                          : colFarmers.docs[index]['images']
+                                              [0]),
                                     ),
                                   ),
                                 ),
@@ -443,6 +468,7 @@ class _DashboardState extends State<Dashboard> {
                                       ),
                               ),
                             );
+                          }
                           return Container();
                         },
                       ),

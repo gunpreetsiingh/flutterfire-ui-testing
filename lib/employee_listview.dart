@@ -12,7 +12,7 @@ class _EmployeeListViewState extends State<EmployeeListView> {
   var txtEmail = TextEditingController();
 
   late QuerySnapshot colEmployees;
-  bool isLoading = true, edit = false;
+  bool isLoading = true, edit = false, activated = true;
 
   String docId = '';
 
@@ -105,6 +105,17 @@ class _EmployeeListViewState extends State<EmployeeListView> {
               const SizedBox(
                 height: 5,
               ),
+              Text(
+                'Activated: ${colEmployees.docs[index]['activated']}',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
               const Divider(
                 color: Colors.grey,
               ),
@@ -117,6 +128,7 @@ class _EmployeeListViewState extends State<EmployeeListView> {
                     txtName.text = colEmployees.docs[index]['name'];
                     txtNumber.text = colEmployees.docs[index]['number'];
                     txtEmail.text = colEmployees.docs[index]['email'];
+                    activated = colEmployees.docs[index]['activated'];
                     showEmployeeDialog();
                   });
                 },
@@ -144,55 +156,75 @@ class _EmployeeListViewState extends State<EmployeeListView> {
     await showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: const Text('Enter employee details'),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: txtName,
-                  decoration: const InputDecoration(hintText: 'Enter name*'),
+        return StatefulBuilder(
+          builder: (contextt, setState) {
+            return AlertDialog(
+              title: const Text('Enter employee details'),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: txtName,
+                      decoration:
+                          const InputDecoration(hintText: 'Enter name*'),
+                    ),
+                    TextField(
+                      controller: txtNumber,
+                      decoration: const InputDecoration(
+                          hintText: 'Enter mobile number*'),
+                    ),
+                    TextField(
+                      controller: txtEmail,
+                      decoration:
+                          const InputDecoration(hintText: 'Enter email'),
+                    ),
+                    CheckboxListTile(
+                      value: activated,
+                      title: const Text('Activated?'),
+                      onChanged: (val) {
+                        setState(() {
+                          activated = val!;
+                        });
+                      },
+                      controlAffinity: ListTileControlAffinity.leading,
+                    ),
+                  ],
                 ),
-                TextField(
-                  controller: txtNumber,
-                  decoration:
-                      const InputDecoration(hintText: 'Enter mobile number*'),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Cancel'),
                 ),
-                TextField(
-                  controller: txtEmail,
-                  decoration: const InputDecoration(hintText: 'Enter email'),
+                TextButton(
+                  onPressed: () async {
+                    if (txtName.text.isNotEmpty) {
+                      if (txtNumber.text.isNotEmpty) {
+                        FirebaseFirestore.instance
+                            .collection('employees')
+                            .doc(edit ? docId : null)
+                            .set(
+                          {
+                            'name': txtName.text,
+                            'number': txtNumber.text,
+                            'image': '',
+                            'email': txtEmail.text,
+                            'activated': activated,
+                          },
+                        );
+                      }
+                    }
+                    Navigator.of(context).pop();
+                    loadData();
+                  },
+                  child: const Text('Confirm'),
                 ),
               ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () async {
-                if (txtName.text.isNotEmpty) {
-                  if (txtNumber.text.isNotEmpty) {
-                    FirebaseFirestore.instance.collection('employees').doc(edit ? docId : null).set(
-                      {
-                        'name': txtName.text,
-                        'number': txtNumber.text,
-                        'image': '',
-                        'email': txtEmail.text,
-                      },
-                    );
-                  }
-                }
-                Navigator.of(context).pop();
-                loadData();
-              },
-              child: const Text('Confirm'),
-            ),
-          ],
+            );
+          },
         );
       },
     );

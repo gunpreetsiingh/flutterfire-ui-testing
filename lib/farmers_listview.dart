@@ -52,364 +52,378 @@ class _FarmersListViewState extends State<FarmersListView> {
               topRight: Radius.circular(15),
             ),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Visibility(
-                visible: colFarmers.docs[index]['images'].isNotEmpty,
-                child: Row(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Visibility(
+                  visible: colFarmers.docs[index]['images'].isNotEmpty,
+                  child: Row(
+                    children: [
+                      for (int i = 0;
+                          i < colFarmers.docs[index]['images'].length;
+                          i++)
+                        CircleAvatar(
+                          radius: 50,
+                          backgroundImage:
+                              const AssetImage('assets/profile.jpeg'),
+                          foregroundImage:
+                              NetworkImage(colFarmers.docs[index]['images'][i]),
+                        ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  'Code: ${colFarmers.docs[index]['code']}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  'Name: ${colFarmers.docs[index]['name']}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  'Number: ${colFarmers.docs[index]['number']}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  'Email: ${colFarmers.docs[index]['email']}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  'Location: ${colFarmers.docs[index]['location']}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  'Employee: $employee',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
+                const Divider(),
+                Row(
                   children: [
-                    for (int i = 0;
-                        i <= colFarmers.docs[index]['images'].length;
-                        i++)
-                      CircleAvatar(
-                        radius: 50,
-                        backgroundImage: const AssetImage('assets/profile.jpeg'),
-                        foregroundImage:
-                            NetworkImage(colFarmers.docs[index]['images'][i]),
-                      ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Text(
-                'Code: ${colFarmers.docs[index]['code']}',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Text(
-                'Name: ${colFarmers.docs[index]['name']}',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Text(
-                'Number: ${colFarmers.docs[index]['number']}',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Text(
-                'Email: ${colFarmers.docs[index]['email']}',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Text(
-                'Location: ${colFarmers.docs[index]['location']}',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Text(
-                'Employee: ${colFarmers.docs[index]['employeeCode']}',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey,
-                ),
-              ),
-              const Divider(),
-              Row(
-                children: [
-                  Visibility(
-                    visible: colFarmers.docs[index]['panId'].isNotEmpty,
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) =>
-                                ViewImage(colFarmers.docs[index]['panId'])));
-                      },
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Image.network(
-                          colFarmers.docs[index]['panId'],
-                          fit: BoxFit.cover,
-                          height: 50,
-                          width: 50,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    'Pan No: ${colFarmers.docs[index]['panNo']}',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                children: [
-                  Visibility(
-                    visible: colFarmers.docs[index]['aadhaarId'].isNotEmpty,
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => ViewImage(
-                                colFarmers.docs[index]['aadhaarId'])));
-                      },
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Image.network(
-                          colFarmers.docs[index]['aadhaarId'],
-                          fit: BoxFit.cover,
-                          height: 50,
-                          width: 50,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    'Aadhaar No: ${colFarmers.docs[index]['aadhaarNo']}',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Text(
-                'Current Batch: ${colFarmers.docs[index]['currentBatch']}',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Text(
-                'From Date: ${colFarmers.docs[index]['fromDate']}',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Text(
-                'To Date: ${colFarmers.docs[index]['toDate']}',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Text(
-                'Batch Effective On: ${colFarmers.docs[index]['batchEffectiveOn']}',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Text(
-                'Total Quantity Allotted: ${colFarmers.docs[index]['totalQtyAllotted']}',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Text(
-                'Loss Quantity Till Date: ${colFarmers.docs[index]['lossQtyTillDate']}',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Text(
-                'Bank Account Number: ${colFarmers.docs[index]['bankAccNumber']}',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Text(
-                'Bank Name: ${colFarmers.docs[index]['bankName']}',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Text(
-                'Bank IFSC Code: ${colFarmers.docs[index]['bankIfscCode']}',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey,
-                ),
-              ),
-              const Divider(),
-              Visibility(
-                visible: colFarmers.docs[index]['attended'],
-                child: const SizedBox(
-                  height: 10,
-                ),
-              ),
-              Visibility(
-                visible: colFarmers.docs[index]['attended'],
-                child: Text(
-                  'Notes: ${colFarmers.docs[index]['attended'] ? colFarmers.docs[index]['notes'] : ''}',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
-                  ),
-                ),
-              ),
-              Visibility(
-                visible: colFarmers.docs[index]['attended'],
-                child: const SizedBox(
-                  height: 10,
-                ),
-              ),
-              Visibility(
-                visible: colFarmers.docs[index]['attended'],
-                child: Text(
-                  'Timestamp: ${DateFormat('dd MMM, yyyy hh:mm:ss a').format(DateTime.parse(colFarmers.docs[index]['attended'] ? colFarmers.docs[index]['timestamp'] : DateTime.now().toString()))}',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-              const Divider(
-                color: Colors.grey,
-              ),
-              ListTile(
-                onTap: () {
-                  Navigator.of(context).pop();
-                  setState(() {
-                    docId = colFarmers.docs[index].id;
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => NewFarmer(
-                          true,
-                          docId,
-                          FarmerDataModel(
-                            code: colFarmers.docs[index]['code'],
-                            images: colFarmers.docs[index]['images'],
-                            name: colFarmers.docs[index]['name'],
-                            number: colFarmers.docs[index]['number'],
-                            email: colFarmers.docs[index]['email'],
-                            location: colFarmers.docs[index]['location'],
-                            panNo: colFarmers.docs[index]['panNo'],
-                            aadhaarNo: colFarmers.docs[index]['aadhaarNo'],
-                            panId: colFarmers.docs[index]['panId'],
-                            aadhaarId: colFarmers.docs[index]['aadhaarId'],
-                            employeeCode: colFarmers.docs[index]
-                                ['employeeCode'],
-                            currentBatch: colFarmers.docs[index]
-                                ['currentBatch'],
-                            fromDate: colFarmers.docs[index]['fromDate'],
-                            toDate: colFarmers.docs[index]['toDate'],
-                            batchEffectiveOn: colFarmers.docs[index]
-                                ['batchEffectiveOn'],
-                            totalQtyAllotted: colFarmers.docs[index]
-                                ['totalQtyAllotted'],
-                            lossQtyTillDate: colFarmers.docs[index]
-                                ['lossQtyTillDate'],
-                            attended: colFarmers.docs[index]['attended'],
-                            bankAccNumber: colFarmers.docs[index]
-                                ['bankAccNumber'],
-                            bankName: colFarmers.docs[index]['bankName'],
-                            bankIfscCode: colFarmers.docs[index]
-                                ['bankIfscCode'],
+                    Visibility(
+                      visible: colFarmers.docs[index]['panId'].isNotEmpty,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  ViewImage(colFarmers.docs[index]['panId'])));
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.network(
+                            colFarmers.docs[index]['panId'],
+                            fit: BoxFit.cover,
+                            height: 50,
+                            width: 50,
                           ),
                         ),
                       ),
-                    );
-                  });
-                },
-                leading: Icon(
-                  Icons.edit_rounded,
-                  color: Colors.black,
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      'Pan No: ${colFarmers.docs[index]['panNo']}',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
                 ),
-                title: Text(
-                  'Edit farmer details',
-                  style: TextStyle(
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    Visibility(
+                      visible: colFarmers.docs[index]['aadhaarId'].isNotEmpty,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => ViewImage(
+                                  colFarmers.docs[index]['aadhaarId'])));
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.network(
+                            colFarmers.docs[index]['aadhaarId'],
+                            fit: BoxFit.cover,
+                            height: 50,
+                            width: 50,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      'Aadhaar No: ${colFarmers.docs[index]['aadhaarNo']}',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  'Current Batch: ${colFarmers.docs[index]['currentBatch']}',
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                    color: Colors.grey,
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  'From Date: ${colFarmers.docs[index]['fromDate']}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  'To Date: ${colFarmers.docs[index]['toDate']}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  'Batch Effective On: ${colFarmers.docs[index]['batchEffectiveOn']}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  'Total Quantity Allotted: ${colFarmers.docs[index]['totalQtyAllotted']}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  'Loss Quantity Till Date: ${colFarmers.docs[index]['lossQtyTillDate']}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  'Reason For Loss Quantity: ${colFarmers.docs[index]['reason']}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  'Bank Account Number: ${colFarmers.docs[index]['bankAccNumber']}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  'Bank Name: ${colFarmers.docs[index]['bankName']}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  'Bank IFSC Code: ${colFarmers.docs[index]['bankIfscCode']}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
+                const Divider(),
+                Visibility(
+                  visible: colFarmers.docs[index]['attended'],
+                  child: const SizedBox(
+                    height: 10,
+                  ),
+                ),
+                Visibility(
+                  visible: colFarmers.docs[index]['attended'],
+                  child: Text(
+                    'Notes: ${colFarmers.docs[index]['attended'] ? colFarmers.docs[index]['notes'] : ''}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: colFarmers.docs[index]['attended'],
+                  child: const SizedBox(
+                    height: 10,
+                  ),
+                ),
+                Visibility(
+                  visible: colFarmers.docs[index]['attended'],
+                  child: Text(
+                    'Timestamp: ${DateFormat('dd MMM, yyyy hh:mm:ss a').format(DateTime.parse(colFarmers.docs[index]['attended'] ? colFarmers.docs[index]['timestamp'] : DateTime.now().toString()))}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                const Divider(
+                  color: Colors.grey,
+                ),
+                ListTile(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    setState(() {
+                      docId = colFarmers.docs[index].id;
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => NewFarmer(
+                            true,
+                            docId,
+                            FarmerDataModel(
+                              code: colFarmers.docs[index]['code'],
+                              images: colFarmers.docs[index]['images'],
+                              name: colFarmers.docs[index]['name'],
+                              number: colFarmers.docs[index]['number'],
+                              email: colFarmers.docs[index]['email'],
+                              location: colFarmers.docs[index]['location'],
+                              panNo: colFarmers.docs[index]['panNo'],
+                              aadhaarNo: colFarmers.docs[index]['aadhaarNo'],
+                              panId: colFarmers.docs[index]['panId'],
+                              aadhaarId: colFarmers.docs[index]['aadhaarId'],
+                              employeeCode: colFarmers.docs[index]
+                                  ['employeeCode'],
+                              currentBatch: colFarmers.docs[index]
+                                  ['currentBatch'],
+                              fromDate: colFarmers.docs[index]['fromDate'],
+                              toDate: colFarmers.docs[index]['toDate'],
+                              batchEffectiveOn: colFarmers.docs[index]
+                                  ['batchEffectiveOn'],
+                              totalQtyAllotted: colFarmers.docs[index]
+                                  ['totalQtyAllotted'],
+                              lossQtyTillDate: colFarmers.docs[index]
+                                  ['lossQtyTillDate'],
+                              attended: colFarmers.docs[index]['attended'],
+                              bankAccNumber: colFarmers.docs[index]
+                                  ['bankAccNumber'],
+                              bankName: colFarmers.docs[index]['bankName'],
+                              bankIfscCode: colFarmers.docs[index]
+                                  ['bankIfscCode'],
+                            ),
+                          ),
+                        ),
+                      );
+                    });
+                  },
+                  leading: Icon(
+                    Icons.edit_rounded,
+                    color: Colors.black,
+                  ),
+                  title: Text(
+                    'Edit farmer details',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },

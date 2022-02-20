@@ -36,7 +36,7 @@ class _NewFarmerState extends State<NewFarmer> {
   var txtBankAccNumber = TextEditingController();
   var txtBankName = TextEditingController();
   var txtBankIfscCode = TextEditingController();
-  String dropDownValue = '', code = '', employeeCode = '';
+  String dropDownValue = '', code = '', employeeCode = '', reason = '';
   String stringPanId = '', stringAadhaarId = '';
   List<String> images = [];
   bool attended = false;
@@ -81,6 +81,7 @@ class _NewFarmerState extends State<NewFarmer> {
       txtBatchEffectiveOn.text = widget.farmerDataModel.batchEffectiveOn!;
       txtTotalQtyAllotted.text = widget.farmerDataModel.totalQtyAllotted!;
       txtLossQtyTillDate.text = widget.farmerDataModel.lossQtyTillDate!;
+      reason = widget.farmerDataModel.reason!;
       attended = widget.farmerDataModel.attended!;
       txtBankAccNumber.text = widget.farmerDataModel.bankAccNumber!;
       txtBankName.text = widget.farmerDataModel.bankName!;
@@ -107,6 +108,7 @@ class _NewFarmerState extends State<NewFarmer> {
       'batchEffectiveOn': txtBatchEffectiveOn.text,
       'totalQtyAllotted': txtTotalQtyAllotted.text,
       'lossQtyTillDate': txtLossQtyTillDate.text,
+      'reason': reason,
       'attended': attended,
       'bankAccNumber': txtBankAccNumber.text,
       'bankName': txtBankName.text,
