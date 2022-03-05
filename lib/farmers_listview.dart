@@ -217,73 +217,7 @@ class _FarmersListViewState extends State<FarmersListView> {
                   height: 10,
                 ),
                 Text(
-                  'Current Batch: ${colFarmers.docs[index]['currentBatch']}',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'From Date: ${colFarmers.docs[index]['fromDate']}',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'To Date: ${colFarmers.docs[index]['toDate']}',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Batch Effective On: ${colFarmers.docs[index]['batchEffectiveOn']}',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Total Quantity Allotted: ${colFarmers.docs[index]['totalQtyAllotted']}',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Loss Quantity Till Date: ${colFarmers.docs[index]['lossQtyTillDate']}',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Reason For Loss Quantity: ${colFarmers.docs[index]['reason']}',
+                  'Total Batches: ${colFarmers.docs[index]['batches'].length}',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -350,7 +284,7 @@ class _FarmersListViewState extends State<FarmersListView> {
                 Visibility(
                   visible: colFarmers.docs[index]['attended'],
                   child: Text(
-                    'Timestamp: ${DateFormat('dd MMM, yyyy hh:mm:ss a').format(DateTime.parse(colFarmers.docs[index]['attended'] ? colFarmers.docs[index]['timestamp'] : DateTime.now().toString()))}',
+                    'Timestamp: ${DateFormat('dd MMM, yyyy').format(DateTime.parse(colFarmers.docs[index]['attended'] ? colFarmers.docs[index]['timestamp'] : DateTime.now().toString()))}',
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -387,16 +321,8 @@ class _FarmersListViewState extends State<FarmersListView> {
                               aadhaarId: colFarmers.docs[index]['aadhaarId'],
                               employeeCode: colFarmers.docs[index]
                                   ['employeeCode'],
-                              currentBatch: colFarmers.docs[index]
-                                  ['currentBatch'],
-                              fromDate: colFarmers.docs[index]['fromDate'],
-                              toDate: colFarmers.docs[index]['toDate'],
-                              batchEffectiveOn: colFarmers.docs[index]
-                                  ['batchEffectiveOn'],
-                              totalQtyAllotted: colFarmers.docs[index]
-                                  ['totalQtyAllotted'],
-                              lossQtyTillDate: colFarmers.docs[index]
-                                  ['lossQtyTillDate'],
+                              batches: colFarmers.docs[index]
+                                  ['batches'],
                               attended: colFarmers.docs[index]['attended'],
                               bankAccNumber: colFarmers.docs[index]
                                   ['bankAccNumber'],

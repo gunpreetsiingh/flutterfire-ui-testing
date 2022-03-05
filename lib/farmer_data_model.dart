@@ -9,19 +9,13 @@ class FarmerDataModel {
       panId,
       aadhaarId,
       employeeCode,
-      currentBatch,
-      batchEffectiveOn,
-      fromDate,
-      toDate,
-      totalQtyAllotted,
-      lossQtyTillDate,
-      reason,
       bankAccNumber,
       bankName,
       bankIfscCode,
       notes,
       timestamp;
-  List<String>? images;
+  List? images;
+  List? batches;
   bool? attended;
   FarmerDataModel(
       {this.code,
@@ -35,13 +29,7 @@ class FarmerDataModel {
       this.panId,
       this.aadhaarId,
       this.employeeCode,
-      this.currentBatch,
-      this.fromDate,
-      this.toDate,
-      this.batchEffectiveOn,
-      this.totalQtyAllotted,
-      this.lossQtyTillDate,
-      this.reason,
+      this.batches,
       this.attended,
       this.bankAccNumber,
       this.bankName,

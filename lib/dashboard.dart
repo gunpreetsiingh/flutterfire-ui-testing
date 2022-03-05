@@ -5,6 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterfire_ui_testing/farmer_data_model.dart';
+import 'package:flutterfire_ui_testing/new_farmer.dart';
 import 'package:flutterfire_ui_testing/view_image.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -158,134 +160,7 @@ class _DashboardState extends State<Dashboard> {
       },
     );
   }
-
-  Future pickImage() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.camera);
-    if (pickedFile != null) {
-      setState(() {
-        _imageFile = File(pickedFile.path);
-      });
-      uploadImageToFirebase();
-    }
-  }
-
-  Future uploadImageToFirebase() async {
-    String fileName = _imageFile.path.substring(
-        _imageFile.path.lastIndexOf('/') + 1, _imageFile.path.length);
-    Reference firebaseStorageRef =
-        FirebaseStorage.instance.ref().child(fileName);
-    UploadTask uploadTask = firebaseStorageRef.putFile(_imageFile);
-    TaskSnapshot taskSnapshot = await uploadTask;
-    taskSnapshot.ref.getDownloadURL().then(
-      (value) {
-        setState(() {
-          imageUrl = value;
-        });
-      },
-    );
-  }
-
-  void showEditOptions(int index) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) {
-        return StatefulBuilder(builder: (context, setState) {
-          return Container(
-            padding: const EdgeInsets.all(15),
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                topRight: Radius.circular(15),
-              ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CircleAvatar(
-                  radius: 50,
-                  backgroundImage: const AssetImage('assets/profile.jpeg'),
-                  foregroundImage: NetworkImage(imageUrl != '' ? imageUrl : ''),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                OutlinedButton(
-                  onPressed: () async {
-                    await pickImage();
-                  },
-                  child: const Text('Capture photo'),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                TextField(
-                  controller: txtLossQty,
-                  decoration: const InputDecoration(
-                      hintText: 'Enter loss qty till date'),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                TextField(
-                  controller: txtReason,
-                  decoration: const InputDecoration(
-                      hintText: 'Enter reason for loss qty'),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                TextField(
-                  controller: txtNotes,
-                  decoration: const InputDecoration(hintText: 'Enter notes'),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                ListTile(
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    FirebaseFirestore.instance
-                        .collection('farmers')
-                        .doc(colFarmers.docs[index].id)
-                        .update(
-                      {
-                        'images': [imageUrl],
-                        'attended': true,
-                        'lossQtyTillDate': txtLossQty.text,
-                        'reason': txtReason.text,
-                        'notes': txtNotes.text,
-                        'timestamp': DateTime.now().toString(),
-                      },
-                    );
-                    setState(() {
-                      imageUrl = '';
-                    });
-                    loadData();
-                  },
-                  leading: Icon(
-                    Icons.done_rounded,
-                    color: Colors.black,
-                  ),
-                  title: Text(
-                    'Submit details',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        });
-      },
-    );
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -328,7 +203,8 @@ class _DashboardState extends State<Dashboard> {
                         itemCount: colFarmers.docs.length,
                         itemBuilder: (context, index) {
                           if (colFarmers.docs[index]['employeeCode'] ==
-                              employeeCode && !colFarmers.docs[index]['attended']) {
+                                  employeeCode &&
+                              !colFarmers.docs[index]['attended']) {
                             return Container(
                               margin: const EdgeInsets.only(top: 10),
                               padding: const EdgeInsets.symmetric(vertical: 5),
@@ -344,7 +220,48 @@ class _DashboardState extends State<Dashboard> {
                                   ]),
                               child: ListTile(
                                 onLongPress: () {
-                                  showEditOptions(index);
+                                  // showEditOptions(index);
+                                  String docId = colFarmers.docs[index].id;
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => NewFarmer(
+                                        true,
+                                        docId,
+                                        FarmerDataModel(
+                                          code: colFarmers.docs[index]['code'],
+                                          images: colFarmers.docs[index]
+                                              ['images'],
+                                          name: colFarmers.docs[index]['name'],
+                                          number: colFarmers.docs[index]
+                                              ['number'],
+                                          email: colFarmers.docs[index]
+                                              ['email'],
+                                          location: colFarmers.docs[index]
+                                              ['location'],
+                                          panNo: colFarmers.docs[index]
+                                              ['panNo'],
+                                          aadhaarNo: colFarmers.docs[index]
+                                              ['aadhaarNo'],
+                                          panId: colFarmers.docs[index]
+                                              ['panId'],
+                                          aadhaarId: colFarmers.docs[index]
+                                              ['aadhaarId'],
+                                          employeeCode: colFarmers.docs[index]
+                                              ['employeeCode'],
+                                          batches: colFarmers.docs[index]
+                                              ['batches'],
+                                          attended: colFarmers.docs[index]
+                                              ['attended'],
+                                          bankAccNumber: colFarmers.docs[index]
+                                              ['bankAccNumber'],
+                                          bankName: colFarmers.docs[index]
+                                              ['bankName'],
+                                          bankIfscCode: colFarmers.docs[index]
+                                              ['bankIfscCode'],
+                                        ),
+                                      ),
+                                    ),
+                                  );
                                 },
                                 leading: GestureDetector(
                                   onTap: () {
@@ -445,7 +362,7 @@ class _DashboardState extends State<Dashboard> {
                                       visible: colFarmers.docs[index]
                                           ['attended'],
                                       child: Text(
-                                        'Timestamp: ${DateFormat('dd MMM, yyyy hh:mm:ss a').format(DateTime.parse(colFarmers.docs[index]['attended'] ? colFarmers.docs[index]['timestamp'] : DateTime.now().toString()))}',
+                                        'Timestamp: ${DateFormat('dd MMM, yyyy').format(DateTime.parse(colFarmers.docs[index]['attended'] ? colFarmers.docs[index]['timestamp'] : DateTime.now().toString()))}',
                                         style: const TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
