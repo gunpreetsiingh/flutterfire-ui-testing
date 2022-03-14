@@ -303,6 +303,10 @@ class _FarmersListViewState extends State<FarmersListView> {
                     Navigator.of(context).pop();
                     setState(() {
                       docId = colFarmers.docs[index].id;
+                      List<String> batchesList = [];
+                      colFarmers.docs[index]['batches'].forEach((element) {
+                        batchesList.add(element);
+                      });
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => NewFarmer(
@@ -319,10 +323,6 @@ class _FarmersListViewState extends State<FarmersListView> {
                               aadhaarNo: colFarmers.docs[index]['aadhaarNo'],
                               panId: colFarmers.docs[index]['panId'],
                               aadhaarId: colFarmers.docs[index]['aadhaarId'],
-                              employeeCode: colFarmers.docs[index]
-                                  ['employeeCode'],
-                              batches: colFarmers.docs[index]
-                                  ['batches'],
                               attended: colFarmers.docs[index]['attended'],
                               bankAccNumber: colFarmers.docs[index]
                                   ['bankAccNumber'],
@@ -403,12 +403,6 @@ class _FarmersListViewState extends State<FarmersListView> {
                             colFarmers.docs[index]['attended']) {
                           return Container();
                         }
-                        employees.forEach((element) {
-                          if (element.startsWith(
-                              colFarmers.docs[index]['employeeCode'])) {
-                            employee = element;
-                          }
-                        });
                         return Container(
                           margin: const EdgeInsets.only(top: 10),
                           padding: const EdgeInsets.symmetric(vertical: 5),

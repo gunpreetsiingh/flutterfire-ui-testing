@@ -5,6 +5,8 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 List<String> employees = [];
 List<String> employeesToken = [];
+List<String> farmers = [];
+List<String> batches = [];
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

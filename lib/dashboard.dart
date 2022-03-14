@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterfire_ui_testing/batch_entries.dart';
 import 'package:flutterfire_ui_testing/farmer_data_model.dart';
 import 'package:flutterfire_ui_testing/new_farmer.dart';
 import 'package:flutterfire_ui_testing/view_image.dart';
@@ -27,7 +28,7 @@ class _DashboardState extends State<Dashboard> {
   var txtReason = TextEditingController();
   String tokenId = '', code = '';
   bool isLoading = true;
-  late QuerySnapshot colFarmers, colEmployee;
+  late QuerySnapshot colBatches, colEmployee;
   String imageUrl = '', employeeCode = '';
 
   final FirebaseStorage _storage = FirebaseStorage.instance;
@@ -45,8 +46,8 @@ class _DashboardState extends State<Dashboard> {
     setState(() {
       isLoading = true;
     });
-    colFarmers = await FirebaseFirestore.instance
-        .collection('farmers')
+    colBatches = await FirebaseFirestore.instance
+        .collection('batches')
         .orderBy('name')
         .get();
     colEmployee = await FirebaseFirestore.instance
@@ -160,7 +161,7 @@ class _DashboardState extends State<Dashboard> {
       },
     );
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -189,7 +190,7 @@ class _DashboardState extends State<Dashboard> {
                     Container(
                       margin: const EdgeInsets.only(top: 10),
                       child: const Text(
-                        'Long press to edit farmer details.',
+                        'Tap on a batch to edit details.',
                         style: TextStyle(
                           color: Colors.grey,
                           fontSize: 14,
@@ -200,11 +201,11 @@ class _DashboardState extends State<Dashboard> {
                     SizedBox(
                       height: MediaQuery.of(context).size.height - 106,
                       child: ListView.builder(
-                        itemCount: colFarmers.docs.length,
+                        itemCount: colBatches.docs.length,
                         itemBuilder: (context, index) {
-                          if (colFarmers.docs[index]['employeeCode'] ==
-                                  employeeCode &&
-                              !colFarmers.docs[index]['attended']) {
+                          if (DateTime.parse(
+                                  colBatches.docs[index]['endingDate'])
+                              .isBefore(DateTime.now())) {
                             return Container(
                               margin: const EdgeInsets.only(top: 10),
                               padding: const EdgeInsets.symmetric(vertical: 5),
@@ -219,80 +220,18 @@ class _DashboardState extends State<Dashboard> {
                                     )
                                   ]),
                               child: ListTile(
-                                onLongPress: () {
-                                  // showEditOptions(index);
-                                  String docId = colFarmers.docs[index].id;
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => NewFarmer(
-                                        true,
-                                        docId,
-                                        FarmerDataModel(
-                                          code: colFarmers.docs[index]['code'],
-                                          images: colFarmers.docs[index]
-                                              ['images'],
-                                          name: colFarmers.docs[index]['name'],
-                                          number: colFarmers.docs[index]
-                                              ['number'],
-                                          email: colFarmers.docs[index]
-                                              ['email'],
-                                          location: colFarmers.docs[index]
-                                              ['location'],
-                                          panNo: colFarmers.docs[index]
-                                              ['panNo'],
-                                          aadhaarNo: colFarmers.docs[index]
-                                              ['aadhaarNo'],
-                                          panId: colFarmers.docs[index]
-                                              ['panId'],
-                                          aadhaarId: colFarmers.docs[index]
-                                              ['aadhaarId'],
-                                          employeeCode: colFarmers.docs[index]
-                                              ['employeeCode'],
-                                          batches: colFarmers.docs[index]
-                                              ['batches'],
-                                          attended: colFarmers.docs[index]
-                                              ['attended'],
-                                          bankAccNumber: colFarmers.docs[index]
-                                              ['bankAccNumber'],
-                                          bankName: colFarmers.docs[index]
-                                              ['bankName'],
-                                          bankIfscCode: colFarmers.docs[index]
-                                              ['bankIfscCode'],
-                                        ),
-                                      ),
-                                    ),
-                                  );
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => BatchEntries(
+                                          colBatches.docs[index]['code'])));
                                 },
-                                leading: GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) => ViewImage(
-                                                colFarmers.docs[index]
-                                                    ['image'])));
-                                  },
-                                  child: SizedBox(
-                                    height: 65,
-                                    width: 65,
-                                    child: CircleAvatar(
-                                      radius: 50,
-                                      backgroundImage: const AssetImage(
-                                          'assets/profile.jpeg'),
-                                      foregroundImage: NetworkImage(colFarmers
-                                              .docs[index]['images'].isEmpty
-                                          ? ''
-                                          : colFarmers.docs[index]['images']
-                                              [0]),
-                                    ),
-                                  ),
-                                ),
                                 title: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Text(
-                                      'Name: ${colFarmers.docs[index]['name']}',
+                                      'Batch Name: ${colBatches.docs[index]['name']}',
                                       style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
@@ -303,7 +242,7 @@ class _DashboardState extends State<Dashboard> {
                                       height: 5,
                                     ),
                                     Text(
-                                      'Number: ${colFarmers.docs[index]['number']}',
+                                      'Farmer Name: ${colBatches.docs[index]['farmerName']}',
                                       style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
@@ -314,75 +253,15 @@ class _DashboardState extends State<Dashboard> {
                                       height: 5,
                                     ),
                                     Text(
-                                      'Email: ${colFarmers.docs[index]['email']}',
+                                      'Qty: ${colBatches.docs[index]['qty']}',
                                       style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.grey,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(
-                                      'Location: ${colFarmers.docs[index]['location']}',
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                    Visibility(
-                                      visible: colFarmers.docs[index]
-                                          ['attended'],
-                                      child: const SizedBox(
-                                        height: 5,
-                                      ),
-                                    ),
-                                    Visibility(
-                                      visible: colFarmers.docs[index]
-                                          ['attended'],
-                                      child: Text(
-                                        'Notes: ${colFarmers.docs[index]['attended'] ? colFarmers.docs[index]['notes'] : ''}',
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ),
-                                    Visibility(
-                                      visible: colFarmers.docs[index]
-                                          ['attended'],
-                                      child: const SizedBox(
-                                        height: 5,
-                                      ),
-                                    ),
-                                    Visibility(
-                                      visible: colFarmers.docs[index]
-                                          ['attended'],
-                                      child: Text(
-                                        'Timestamp: ${DateFormat('dd MMM, yyyy').format(DateTime.parse(colFarmers.docs[index]['attended'] ? colFarmers.docs[index]['timestamp'] : DateTime.now().toString()))}',
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.grey,
-                                        ),
                                       ),
                                     ),
                                   ],
                                 ),
-                                trailing: colFarmers.docs[index]['attended']
-                                    ? const Icon(
-                                        Icons.done_rounded,
-                                        color: Colors.green,
-                                        size: 30,
-                                      )
-                                    : const Icon(
-                                        Icons.warning_amber_rounded,
-                                        color: Colors.amber,
-                                        size: 30,
-                                      ),
                               ),
                             );
                           }

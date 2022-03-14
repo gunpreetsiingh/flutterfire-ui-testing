@@ -9,6 +9,7 @@ import 'package:flutterfire_ui_testing/farmer_data_model.dart';
 import 'package:flutterfire_ui_testing/main.dart';
 import 'package:flutterfire_ui_testing/view_image.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:multiselect/multiselect.dart';
 
 class NewFarmer extends StatefulWidget {
   bool edit;
@@ -28,23 +29,15 @@ class _NewFarmerState extends State<NewFarmer> {
   var txtLocation = TextEditingController();
   var txtPanNo = TextEditingController();
   var txtAadhaarNo = TextEditingController();
-  List<TextEditingController> txtCurrentBatch = [];
-  List<TextEditingController> txtFromDate = [];
-  List<TextEditingController> txtToDate = [];
-  List<TextEditingController> txtBatchEffectiveOn = [];
-  List<TextEditingController> txtTotalQtyAllotted = [];
-  List<TextEditingController> txtLossQtyTillDate = [];
-  List<TextEditingController> txtReason = [];
   var txtBankAccNumber = TextEditingController();
   var txtBankName = TextEditingController();
   var txtBankIfscCode = TextEditingController();
   var txtNotes = TextEditingController();
-  String dropDownValue = '', code = '', employeeCode = '', reason = '';
+  String dropDownValue = '', code = '', reason = '';
   String stringPanId = '', stringAadhaarId = '', imageUrl = '';
   List images = [];
   bool attended = false;
   var _imageFile;
-  List<Widget> batches = [];
   bool isAdmin =
       FirebaseAuth.instance.currentUser!.email == 'qg.rickfeed@gmail.com';
   final picker = ImagePicker();
@@ -57,11 +50,7 @@ class _NewFarmerState extends State<NewFarmer> {
       setState(() {
         code = 'F' + generateRandomCode();
       });
-      addBatch(batches.length);
     } else {
-      widget.farmerDataModel.batches!.forEach(((element) {
-        addBatch(batches.length);
-      }));
       prepare();
     }
   }
@@ -78,27 +67,7 @@ class _NewFarmerState extends State<NewFarmer> {
       txtAadhaarNo.text = widget.farmerDataModel.aadhaarNo!;
       stringPanId = widget.farmerDataModel.panId!;
       stringAadhaarId = widget.farmerDataModel.aadhaarId!;
-      employeeCode = widget.farmerDataModel.employeeCode!;
-      employees.forEach((element) {
-        if (element.startsWith(employeeCode)) {
-          dropDownValue = element;
-        }
-      });
       int i = 0;
-      while (i < batches.length) {
-        txtCurrentBatch[i].text =
-            widget.farmerDataModel.batches![i]['currentBatch'];
-        txtFromDate[i].text = widget.farmerDataModel.batches![i]['fromDate'];
-        txtToDate[i].text = widget.farmerDataModel.batches![i]['toDate'];
-        txtBatchEffectiveOn[i].text =
-            widget.farmerDataModel.batches![i]['batchEffectiveOn'];
-        txtTotalQtyAllotted[i].text =
-            widget.farmerDataModel.batches![i]['totalQtyAllotted'];
-        txtLossQtyTillDate[i].text =
-            widget.farmerDataModel.batches![i]['lossQtyTillDate'];
-        txtReason[i].text = widget.farmerDataModel.batches![i]['reason'];
-        i++;
-      }
       attended = widget.farmerDataModel.attended!;
       txtBankAccNumber.text = widget.farmerDataModel.bankAccNumber!;
       txtBankName.text = widget.farmerDataModel.bankName!;
@@ -107,20 +76,6 @@ class _NewFarmerState extends State<NewFarmer> {
   }
 
   void saveEditFarmer() {
-    List batchData = [];
-    int i = 0;
-    while (i < txtCurrentBatch.length) {
-      batchData.add({
-        'currentBatch': txtCurrentBatch[i].text,
-        'fromDate': txtFromDate[i].text,
-        'toDate': txtToDate[i].text,
-        'batchEffectiveOn': txtBatchEffectiveOn[i].text,
-        'totalQtyAllotted': txtTotalQtyAllotted[i].text,
-        'lossQtyTillDate': txtLossQtyTillDate[i].text,
-        'reason': txtReason[i].text,
-      });
-      i++;
-    }
     FirebaseFirestore.instance.collection('farmers').doc(code).set({
       'code': code,
       'images': images,
@@ -132,8 +87,6 @@ class _NewFarmerState extends State<NewFarmer> {
       'aadhaarNo': txtAadhaarNo.text,
       'panId': stringPanId,
       'aadhaarId': stringAadhaarId,
-      'employeeCode': employeeCode,
-      'batches': batchData,
       'attended': isAdmin ? attended : true,
       'bankAccNumber': txtBankAccNumber.text,
       'bankName': txtBankName.text,
@@ -177,86 +130,6 @@ class _NewFarmerState extends State<NewFarmer> {
         });
       },
     );
-  }
-
-  void addBatch(int index) {
-    txtCurrentBatch.add(TextEditingController());
-    txtFromDate.add(TextEditingController());
-    txtToDate.add(TextEditingController());
-    txtBatchEffectiveOn.add(TextEditingController());
-    txtTotalQtyAllotted.add(TextEditingController());
-    txtLossQtyTillDate.add(TextEditingController());
-    txtReason.add(TextEditingController());
-    Widget newColumn = Container(
-      color: Colors.grey.withOpacity(0.2),
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      padding: const EdgeInsets.all(5),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          IconButton(
-            onPressed: () {
-              if (batches.length != 1) {
-                setState(() {
-                  batches.removeAt(index);
-                  txtCurrentBatch.removeAt(index);
-                  txtFromDate.removeAt(index);
-                  txtToDate.removeAt(index);
-                  txtBatchEffectiveOn.removeAt(index);
-                  txtTotalQtyAllotted.removeAt(index);
-                  txtLossQtyTillDate.removeAt(index);
-                });
-              }
-            },
-            icon: const Icon(
-              Icons.delete_outline_rounded,
-              color: Colors.red,
-            ),
-          ),
-          TextField(
-            controller: txtCurrentBatch[index],
-            enabled: isAdmin,
-            decoration: const InputDecoration(hintText: 'Current Batch'),
-          ),
-          TextField(
-            controller: txtFromDate[index],
-            enabled: isAdmin,
-            decoration: const InputDecoration(hintText: 'From Date'),
-          ),
-          TextField(
-            controller: txtToDate[index],
-            enabled: isAdmin,
-            decoration: const InputDecoration(hintText: 'To Date'),
-          ),
-          TextField(
-            controller: txtBatchEffectiveOn[index],
-            enabled: isAdmin,
-            decoration: const InputDecoration(hintText: 'Batch effective on'),
-          ),
-          TextField(
-            controller: txtTotalQtyAllotted[index],
-            enabled: isAdmin || txtTotalQtyAllotted[index].text == '',
-            decoration:
-                const InputDecoration(hintText: 'Total quantity allotted'),
-          ),
-          TextField(
-            controller: txtLossQtyTillDate[index],
-            enabled: isAdmin || txtLossQtyTillDate[index].text == '',
-            decoration:
-                const InputDecoration(hintText: 'Loss quantity till date'),
-          ),
-          TextField(
-            controller: txtReason[index],
-            enabled: isAdmin || txtReason[index].text == '',
-            decoration:
-                const InputDecoration(hintText: 'Reason for loss quantity'),
-          ),
-        ],
-      ),
-    );
-    setState(() {
-      batches.add(newColumn);
-    });
   }
 
   Future pickProfileImage() async {
@@ -360,7 +233,7 @@ class _NewFarmerState extends State<NewFarmer> {
                 children: [
                   OutlinedButton(
                     onPressed: () async {
-                      if(isAdmin){
+                      if (isAdmin) {
                         await pickImage(true);
                       }
                     },
@@ -402,8 +275,8 @@ class _NewFarmerState extends State<NewFarmer> {
                 children: [
                   OutlinedButton(
                     onPressed: () async {
-                      if(isAdmin){
-                      await pickImage(false);
+                      if (isAdmin) {
+                        await pickImage(false);
                       }
                     },
                     child: const Text('Upload aadhaar card photo'),
@@ -431,32 +304,6 @@ class _NewFarmerState extends State<NewFarmer> {
                   ),
                 ],
               ),
-              SizedBox(
-                height: 10,
-              ),
-              Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text('Batches'),
-                      IconButton(
-                        onPressed: () {
-                          addBatch(batches.length);
-                        },
-                        icon: const Icon(Icons.add_rounded),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: batches,
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 10,
-              ),
               TextField(
                 controller: txtBankAccNumber,
                 enabled: isAdmin,
@@ -476,30 +323,6 @@ class _NewFarmerState extends State<NewFarmer> {
               TextField(
                 controller: txtNotes,
                 decoration: const InputDecoration(hintText: 'Notes'),
-              ),
-              Visibility(
-                visible: isAdmin,
-                child: DropdownButton<String>(
-                  hint: const Text('Select employee'),
-                  value: dropDownValue == '' ? null : dropDownValue,
-                  isExpanded: true,
-                  icon: const Icon(Icons.arrow_downward),
-                  elevation: 16,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      dropDownValue = newValue!;
-                      employeeCode =
-                          newValue.substring(0, newValue.indexOf('-'));
-                    });
-                  },
-                  items:
-                      employees.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
               ),
               const SizedBox(
                 height: 100,

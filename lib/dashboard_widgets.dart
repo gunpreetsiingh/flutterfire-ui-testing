@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterfire_ui_testing/batches_listview.dart';
 import 'package:flutterfire_ui_testing/employee_listview.dart';
 import 'package:flutterfire_ui_testing/farmers_listview.dart';
 import 'package:flutterfire_ui_testing/main.dart';
@@ -12,8 +13,8 @@ class DashboardWidgets extends StatefulWidget {
 }
 
 class _DashboardWidgetsState extends State<DashboardWidgets> {
-  late QuerySnapshot colFarmers, colEmployees;
-  int totalFarmers = 0, unattendedFarmers = 0, totalEmployees = 0;
+  late QuerySnapshot colFarmers, colEmployees, colBatches;
+  int totalFarmers = 0, totalEmployees = 0, totalBatches = 0;
   bool loadingData = true;
   @override
   void initState() {
@@ -34,8 +35,18 @@ class _DashboardWidgetsState extends State<DashboardWidgets> {
         .collection('employees')
         .orderBy('name')
         .get();
+    colBatches = await FirebaseFirestore.instance
+        .collection('batches')
+        .orderBy('name')
+        .get();
     // employees.add('Select employee');
     // employeesToken.add('Select employee token');
+    farmers.clear();
+    colFarmers.docs.forEach(
+      (element) {
+        farmers.add(element['code'] + '-' + element['name']);
+      },
+    );
     employees.clear();
     employeesToken.clear();
     colEmployees.docs.forEach(
@@ -44,14 +55,16 @@ class _DashboardWidgetsState extends State<DashboardWidgets> {
         employeesToken.add(element['token']);
       },
     );
+    batches.clear();
+    colBatches.docs.forEach(
+      (element) {
+        batches.add(element['code'] + '-' + element['name']);
+      },
+    );
     setState(() {
       totalFarmers = colFarmers.docs.length;
       totalEmployees = colEmployees.docs.length;
-      colFarmers.docs.forEach((element) {
-        if (!element['attended']) {
-          unattendedFarmers++;
-        }
-      });
+      totalBatches = colBatches.docs.length;
       loadingData = false;
     });
   }
@@ -88,7 +101,7 @@ class _DashboardWidgetsState extends State<DashboardWidgets> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Total Farmers',
+                    'Farmers',
                     style: TextStyle(
                       color: Colors.green,
                       fontSize: 16,
@@ -134,69 +147,6 @@ class _DashboardWidgetsState extends State<DashboardWidgets> {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (contetx) => FarmersListView(true)));
-            },
-            child: Container(
-              height: 107,
-              width: 177,
-              padding: const EdgeInsets.all(15),
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: Colors.purple.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Unattended Farmers',
-                    style: TextStyle(
-                      color: Colors.purple,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              color: Colors.purple,
-                              width: 2,
-                            )),
-                        child: const Icon(
-                          Icons.people_outline_rounded,
-                          color: Colors.purple,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        '$unattendedFarmers',
-                        style: TextStyle(
-                          color: Colors.purple,
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
               Navigator.of(context).push(
                   MaterialPageRoute(builder: (contetx) => EmployeeListView()));
             },
@@ -214,7 +164,7 @@ class _DashboardWidgetsState extends State<DashboardWidgets> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Total Employees',
+                    'Employees',
                     style: TextStyle(
                       color: Colors.orange,
                       fontSize: 16,
@@ -248,6 +198,69 @@ class _DashboardWidgetsState extends State<DashboardWidgets> {
                         '$totalEmployees',
                         style: TextStyle(
                           color: Colors.orange,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (contetx) => BatchesListView()));
+            },
+            child: Container(
+              height: 107,
+              width: 177,
+              padding: const EdgeInsets.all(15),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Colors.blue.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Batches',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: Colors.blue,
+                              width: 2,
+                            )),
+                        child: const Icon(
+                          Icons.article_outlined,
+                          color: Colors.blue,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        '$totalBatches',
+                        style: TextStyle(
+                          color: Colors.blue,
                           fontSize: 30,
                           fontWeight: FontWeight.bold,
                         ),

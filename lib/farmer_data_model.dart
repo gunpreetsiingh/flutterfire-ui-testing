@@ -1,3 +1,5 @@
+import 'package:flutterfire_ui_testing/batch_data_model.dart';
+
 class FarmerDataModel {
   String? code,
       name,
@@ -8,14 +10,12 @@ class FarmerDataModel {
       aadhaarNo,
       panId,
       aadhaarId,
-      employeeCode,
       bankAccNumber,
       bankName,
       bankIfscCode,
       notes,
       timestamp;
   List? images;
-  List? batches;
   bool? attended;
   FarmerDataModel(
       {this.code,
@@ -28,8 +28,6 @@ class FarmerDataModel {
       this.aadhaarNo,
       this.panId,
       this.aadhaarId,
-      this.employeeCode,
-      this.batches,
       this.attended,
       this.bankAccNumber,
       this.bankName,
