@@ -40,6 +40,7 @@ dependencies:
   firebase_storage: ^10.2.7
   image_picker: ^0.8.4+8
   multiselect: ^0.0.4
+  location: ^4.3.0
 
 dev_dependencies:
   flutter_lints: ^1.0.0

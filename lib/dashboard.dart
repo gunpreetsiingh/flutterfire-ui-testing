@@ -10,6 +10,7 @@ import 'package:flutterfire_ui_testing/farmer_data_model.dart';
 import 'package:flutterfire_ui_testing/new_farmer.dart';
 import 'package:flutterfire_ui_testing/view_image.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:location/location.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:intl/intl.dart';
 
@@ -34,6 +35,7 @@ class _DashboardState extends State<Dashboard> {
   final FirebaseStorage _storage = FirebaseStorage.instance;
   late File _imageFile;
   final picker = ImagePicker();
+  Location location = new Location();
 
   @override
   void initState() {
@@ -46,6 +48,7 @@ class _DashboardState extends State<Dashboard> {
     setState(() {
       isLoading = true;
     });
+    await checkLocationPermissions();
     colBatches = await FirebaseFirestore.instance
         .collection('batches')
         .orderBy('name')
@@ -58,6 +61,27 @@ class _DashboardState extends State<Dashboard> {
       employeeCode = colEmployee.docs.first['code'];
       isLoading = false;
     });
+  }
+
+  Future<void> checkLocationPermissions() async {
+    bool _serviceEnabled;
+    PermissionStatus _permissionGranted;
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
   }
 
   void checkName() async {
@@ -205,7 +229,7 @@ class _DashboardState extends State<Dashboard> {
                         itemBuilder: (context, index) {
                           if (DateTime.parse(
                                   colBatches.docs[index]['endingDate'])
-                              .isBefore(DateTime.now())) {
+                              .isAfter(DateTime.now())) {
                             return Container(
                               margin: const EdgeInsets.only(top: 10),
                               padding: const EdgeInsets.symmetric(vertical: 5),
@@ -223,7 +247,8 @@ class _DashboardState extends State<Dashboard> {
                                 onTap: () {
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) => BatchEntries(
-                                          colBatches.docs[index]['code'])));
+                                          colBatches.docs[index]['code'],
+                                          colBatches.docs[index]['qty'], colBatches.docs[index]['fromDate'])));
                                 },
                                 title: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,

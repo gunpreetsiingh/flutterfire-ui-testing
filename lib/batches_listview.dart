@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui_testing/batch_data_model.dart';
+import 'package:flutterfire_ui_testing/batch_entries.dart';
 import 'package:flutterfire_ui_testing/new_batch.dart';
 
 class BatchesListView extends StatefulWidget {
@@ -233,6 +234,9 @@ class _BatchesListViewState extends State<BatchesListView> {
                                 )
                               ]),
                           child: ListTile(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => BatchEntries(colBatches.docs[index]['code'], colBatches.docs[index]['qty'], colBatches.docs[index]['fromDate'])));
+                            },
                             onLongPress: () {
                               showEditOptions(index);
                             },
@@ -241,6 +245,17 @@ class _BatchesListViewState extends State<BatchesListView> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.min,
                               children: [
+                                Text(
+                                  'Code: ${colBatches.docs[index]['code']}',
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
                                 Text(
                                   'Batch: ${colBatches.docs[index]['name']}',
                                   style: const TextStyle(

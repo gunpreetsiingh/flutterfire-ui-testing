@@ -217,17 +217,6 @@ class _FarmersListViewState extends State<FarmersListView> {
                   height: 10,
                 ),
                 Text(
-                  'Total Batches: ${colFarmers.docs[index]['batches'].length}',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
                   'Bank Account Number: ${colFarmers.docs[index]['bankAccNumber']}',
                   style: const TextStyle(
                     fontSize: 16,
@@ -303,10 +292,6 @@ class _FarmersListViewState extends State<FarmersListView> {
                     Navigator.of(context).pop();
                     setState(() {
                       docId = colFarmers.docs[index].id;
-                      List<String> batchesList = [];
-                      colFarmers.docs[index]['batches'].forEach((element) {
-                        batchesList.add(element);
-                      });
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => NewFarmer(
