@@ -11,7 +11,10 @@ import 'package:location/location.dart';
 
 class NewBatchEntry extends StatefulWidget {
   String batchCode;
-  NewBatchEntry(this.batchCode, {Key? key}) : super(key: key);
+  bool edit;
+  Map data;
+  NewBatchEntry(this.batchCode, this.edit, this.data, {Key? key})
+      : super(key: key);
 
   @override
   State<NewBatchEntry> createState() => _NewBatchEntryState();
@@ -24,10 +27,6 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
   var txtFeedIntake = TextEditingController();
   var txtWeight = TextEditingController();
   var txtFeedToOrder = TextEditingController();
-  var txtSalesNos = TextEditingController();
-  var txtSales = TextEditingController();
-  var txtDcNo = TextEditingController();
-  var txtPurchaser = TextEditingController();
   double mortalityTillDate = 0;
   bool isLoading = true;
   String eCode = '', eName = '', location = '', date = '', reason = '';
@@ -35,12 +34,44 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
   var picker = ImagePicker(), _imageFile;
   Location locationObject = new Location();
   late LocationData _locationData;
+  bool isAdmin =
+      FirebaseAuth.instance.currentUser!.email == 'qg.rickfeed@gmail.com';
+  bool loadingAgain = false;
+  late QuerySnapshot colEmployee;
+  late QuerySnapshot colBatches;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    loadMortality();
+    if (widget.edit) {
+      prefill();
+      setState(() {
+        isLoading = false;
+      });
+    } else {
+      loadMortality();
+    }
+  }
+
+  void prefill() {
+    setState(() {
+      date = widget.data['date'].toString();
+      txtLossQty.text = widget.data['lossQty'].toString();
+      txtRemarks.text = widget.data['remarks'].toString();
+      txtMedicineAdvice.text = widget.data['medicineAdvice'].toString();
+      txtFeedIntake.text = widget.data['feedIntake'].toString();
+      txtWeight.text = widget.data['weight'].toString();
+      txtFeedToOrder.text = widget.data['feedToOrder'].toString();
+      mortalityTillDate = double.parse(widget.data['mortalityTillDate']);
+      eCode = widget.data['eCode'].toString();
+      eName = widget.data['eName'].toString();
+      location = widget.data['location'].toString();
+      reason = widget.data['reason'].toString();
+      widget.data['photos'].forEach((element) {
+        photos.add(element);
+      });
+    });
   }
 
   Future pickImage() async {
@@ -72,34 +103,62 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
   void loadMortality() async {
     setState(() {
       isLoading = true;
+      mortalityTillDate = 0;
     });
-    QuerySnapshot colEmployee = await FirebaseFirestore.instance
-        .collection('employees')
-        .where('email', isEqualTo: FirebaseAuth.instance.currentUser!.email!)
-        .get();
-    QuerySnapshot colBatches = await FirebaseFirestore.instance
-        .collection('entries')
-        .where('batch', isEqualTo: widget.batchCode)
-        .get();
+    if (!loadingAgain) {
+      date = DateFormat('yyyy-MM-dd').format(DateTime.now());
+      colEmployee = await FirebaseFirestore.instance
+          .collection('employees')
+          .where('email', isEqualTo: FirebaseAuth.instance.currentUser!.email!)
+          .get();
+      colBatches = await FirebaseFirestore.instance
+          .collection('entries')
+          .where('batch', isEqualTo: widget.batchCode)
+          .get();
+    }
     colBatches.docs.forEach((element) {
-      mortalityTillDate += double.parse(element['lossQty']);
+      if (DateTime.parse(date).isAfter(DateTime.parse(element['date']))) {
+        mortalityTillDate += double.parse(element['lossQty']);
+      }
     });
-    QuerySnapshot colReasons =
-        await FirebaseFirestore.instance.collection('reasons').get();
-    colReasons.docs.forEach((element) {
-      reasons.add(element['reason']);
-    });
-    date = DateFormat('yyyy-MM-dd').format(DateTime.now());
-    eCode = colEmployee.docs.first['code'];
-    eName = colEmployee.docs.first['name'];
-    _locationData = await locationObject.getLocation();
+    if (!loadingAgain) {
+      QuerySnapshot colReasons =
+          await FirebaseFirestore.instance.collection('reasons').get();
+      colReasons.docs.forEach((element) {
+        reasons.add(element['reason']);
+      });
+    }
+    if (isAdmin) {
+      eCode = 'E001';
+      eName = 'Admin';
+    } else {
+      eCode = colEmployee.docs.first['code'];
+      eName = colEmployee.docs.first['name'];
+    }
+    if (!loadingAgain) {
+      _locationData = await locationObject.getLocation();
+    }
     location = '${_locationData.latitude}, ${_locationData.longitude}';
     setState(() {
       isLoading = false;
     });
   }
 
-  void saveBatchEntry() {
+  void saveBatchEntry() async {
+    if (!isAdmin) {
+      QuerySnapshot colTodayEntry = await FirebaseFirestore.instance
+          .collection('entries')
+          .where('date',
+              isEqualTo: DateFormat('yyyy-MM-dd').format(DateTime.now()))
+          .get();
+      if (colTodayEntry.docs.length == 1) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          backgroundColor: Colors.red,
+          content: Text('There is already a visit entry for this date.'),
+        ));
+        return;
+      }
+    }
     FirebaseFirestore.instance.collection('entries').doc().set({
       'batch': widget.batchCode,
       'employee': eCode + '-' + eName,
@@ -112,12 +171,9 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
       'medicineAdvice': txtMedicineAdvice.text,
       'feedIntake': txtFeedIntake.text,
       'weight': txtWeight.text,
-      'mortalityTillDate': mortalityTillDate.toString(),
+      'mortalityTillDate':
+          (mortalityTillDate + double.parse(txtLossQty.text)).toString(),
       'feedToOrder': txtFeedToOrder.text,
-      'salesNos': txtSalesNos.text,
-      'sales': txtSales.text,
-      'dcNo': txtDcNo.text,
-      'purchaser': txtPurchaser.text,
     });
     Navigator.of(context).pop();
   }
@@ -153,8 +209,33 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
                     const SizedBox(
                       height: 5,
                     ),
-                    Text(
-                      'Date: $date',
+                    GestureDetector(
+                      onTap: () async {
+                        if (isAdmin) {
+                          var result = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.parse(
+                                  date == 'Enter ending date'
+                                      ? DateTime.now().toString()
+                                      : date),
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime(2100));
+                          if (result != null) {
+                            setState(() {
+                              date = result
+                                  .toString()
+                                  .substring(0, result.toString().indexOf(' '));
+                            });
+                            setState(() {
+                              loadingAgain = true;
+                            });
+                            loadMortality();
+                          }
+                        }
+                      },
+                      child: Text(
+                        'Date: $date',
+                      ),
                     ),
                     const SizedBox(
                       height: 5,
@@ -181,7 +262,7 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
                       controller: txtLossQty,
                       keyboardType: TextInputType.number,
                       decoration:
-                          const InputDecoration(hintText: 'Enter loss qty'),
+                          const InputDecoration(labelText: 'Enter loss qty'),
                     ),
                     const SizedBox(
                       height: 5,
@@ -211,7 +292,7 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
                     TextField(
                       controller: txtRemarks,
                       decoration:
-                          const InputDecoration(hintText: 'Enter remarks'),
+                          const InputDecoration(labelText: 'Enter remarks'),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -253,7 +334,7 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
                     TextField(
                       controller: txtMedicineAdvice,
                       decoration: const InputDecoration(
-                          hintText: 'Enter medicine advice'),
+                          labelText: 'Enter medicine advice'),
                     ),
                     const SizedBox(
                       height: 5,
@@ -262,7 +343,7 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
                       controller: txtFeedIntake,
                       keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
-                          hintText: 'Enter feed intake (Kg)'),
+                          labelText: 'Enter feed intake (Kg)'),
                     ),
                     const SizedBox(
                       height: 5,
@@ -271,7 +352,7 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
                       controller: txtWeight,
                       keyboardType: TextInputType.number,
                       decoration:
-                          const InputDecoration(hintText: 'Enter weight (Kg)'),
+                          const InputDecoration(labelText: 'Enter weight (Kg)'),
                     ),
                     const SizedBox(
                       height: 5,
@@ -284,42 +365,7 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
                       controller: txtFeedToOrder,
                       keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
-                          hintText: 'Enter feed to order (Kg)'),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    TextField(
-                      controller: txtSalesNos,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                          hintText: 'Enter sales nos (Kg)'),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    TextField(
-                      controller: txtSales,
-                      keyboardType: TextInputType.number,
-                      decoration:
-                          const InputDecoration(hintText: 'Enter sales (Kg)'),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    TextField(
-                      controller: txtDcNo,
-                      keyboardType: TextInputType.number,
-                      decoration:
-                          const InputDecoration(hintText: 'Enter DC no'),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    TextField(
-                      controller: txtPurchaser,
-                      decoration:
-                          const InputDecoration(hintText: 'Enter purchaser'),
+                          labelText: 'Enter feed to order (Kg)'),
                     ),
                   ],
                 ),

@@ -202,28 +202,28 @@ class _NewFarmerState extends State<NewFarmer> {
               TextField(
                 controller: txtName,
                 enabled: isAdmin,
-                decoration: const InputDecoration(hintText: 'Enter name'),
+                decoration: const InputDecoration(labelText: 'Enter name'),
               ),
               TextField(
                 controller: txtNumber,
                 enabled: isAdmin,
                 decoration:
-                    const InputDecoration(hintText: 'Enter mobile number'),
+                    const InputDecoration(labelText: 'Enter mobile number'),
               ),
               TextField(
                 controller: txtEmail,
                 enabled: isAdmin,
-                decoration: const InputDecoration(hintText: 'Enter email'),
+                decoration: const InputDecoration(labelText: 'Enter email'),
               ),
               TextField(
                 controller: txtLocation,
                 enabled: isAdmin,
-                decoration: const InputDecoration(hintText: 'Enter location'),
+                decoration: const InputDecoration(labelText: 'Enter location'),
               ),
               TextField(
                 controller: txtPanNo,
                 enabled: isAdmin,
-                decoration: const InputDecoration(hintText: 'Pan no'),
+                decoration: const InputDecoration(labelText: 'Pan no'),
               ),
               const SizedBox(
                 height: 10,
@@ -265,7 +265,7 @@ class _NewFarmerState extends State<NewFarmer> {
               TextField(
                 controller: txtAadhaarNo,
                 enabled: isAdmin,
-                decoration: const InputDecoration(hintText: 'Aadhaar No'),
+                decoration: const InputDecoration(labelText: 'Aadhaar No'),
               ),
               const SizedBox(
                 height: 10,
@@ -308,21 +308,21 @@ class _NewFarmerState extends State<NewFarmer> {
                 controller: txtBankAccNumber,
                 enabled: isAdmin,
                 decoration:
-                    const InputDecoration(hintText: 'Bank account number'),
+                    const InputDecoration(labelText: 'Bank account number'),
               ),
               TextField(
                 controller: txtBankName,
                 enabled: isAdmin,
-                decoration: const InputDecoration(hintText: 'Bank name'),
+                decoration: const InputDecoration(labelText: 'Bank name'),
               ),
               TextField(
                 controller: txtBankIfscCode,
                 enabled: isAdmin,
-                decoration: const InputDecoration(hintText: 'Bank IFSC code'),
+                decoration: const InputDecoration(labelText: 'Bank IFSC code'),
               ),
               TextField(
                 controller: txtNotes,
-                decoration: const InputDecoration(hintText: 'Notes'),
+                decoration: const InputDecoration(labelText: 'Notes'),
               ),
               const SizedBox(
                 height: 100,

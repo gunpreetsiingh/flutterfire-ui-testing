@@ -6,7 +6,12 @@ class BatchDataModel {
       qty,
       fromDate,
       endingDate,
-      employee;
+      employee,
+      scc,
+      sfc,
+      acc,
+      afc,
+      cons;
   BatchDataModel({
     this.code,
     this.name,
@@ -16,5 +21,10 @@ class BatchDataModel {
     this.fromDate,
     this.endingDate,
     this.employee,
+    this.scc,
+    this.sfc,
+    this.acc,
+    this.afc,
+    this.cons
   });
 }

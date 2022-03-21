@@ -34,7 +34,7 @@ class _DashboardAdminState extends State<DashboardAdmin> {
           title: const Text('Please enter your name.'),
           content: TextField(
             controller: txtName,
-            decoration: const InputDecoration(hintText: 'Start typing...'),
+            decoration: const InputDecoration(labelText: 'Start typing...'),
           ),
           actions: [
             TextButton(
@@ -96,7 +96,8 @@ class _DashboardAdminState extends State<DashboardAdmin> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const DashboardAdmin()));
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => const DashboardAdmin()));
             },
             icon: const Icon(
               Icons.refresh_outlined,

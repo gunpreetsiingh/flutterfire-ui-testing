@@ -115,12 +115,12 @@ class _DashboardState extends State<Dashboard> {
             children: [
               TextField(
                 controller: txtName,
-                decoration: const InputDecoration(hintText: 'Enter your name'),
+                decoration: const InputDecoration(labelText: 'Enter your name'),
               ),
               TextField(
                 controller: txtNumber,
                 decoration:
-                    const InputDecoration(hintText: 'Enter your phone number'),
+                    const InputDecoration(labelText: 'Enter your phone number'),
               ),
             ],
           ),
@@ -216,7 +216,7 @@ class _DashboardState extends State<Dashboard> {
                       child: const Text(
                         'Tap on a batch to edit details.',
                         style: TextStyle(
-                          color: Colors.grey,
+                          color: Colors.black,
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
                         ),
@@ -248,7 +248,8 @@ class _DashboardState extends State<Dashboard> {
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) => BatchEntries(
                                           colBatches.docs[index]['code'],
-                                          colBatches.docs[index]['qty'], colBatches.docs[index]['fromDate'])));
+                                          colBatches.docs[index]['qty'],
+                                          colBatches.docs[index]['fromDate'])));
                                 },
                                 title: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -260,7 +261,7 @@ class _DashboardState extends State<Dashboard> {
                                       style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.grey,
+                                        color: Colors.black,
                                       ),
                                     ),
                                     const SizedBox(
@@ -271,7 +272,7 @@ class _DashboardState extends State<Dashboard> {
                                       style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.grey,
+                                        color: Colors.black,
                                       ),
                                     ),
                                     const SizedBox(
@@ -282,7 +283,7 @@ class _DashboardState extends State<Dashboard> {
                                       style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.grey,
+                                        color: Colors.black,
                                       ),
                                     ),
                                   ],

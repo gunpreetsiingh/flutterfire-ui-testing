@@ -66,7 +66,7 @@ class _EmployeeListViewState extends State<EmployeeListView> {
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.grey,
+                  color: Colors.black,
                 ),
               ),
               const SizedBox(
@@ -77,7 +77,7 @@ class _EmployeeListViewState extends State<EmployeeListView> {
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.grey,
+                  color: Colors.black,
                 ),
               ),
               const SizedBox(
@@ -88,7 +88,7 @@ class _EmployeeListViewState extends State<EmployeeListView> {
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.grey,
+                  color: Colors.black,
                 ),
               ),
               const SizedBox(
@@ -99,7 +99,7 @@ class _EmployeeListViewState extends State<EmployeeListView> {
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.grey,
+                  color: Colors.black,
                 ),
               ),
               const SizedBox(
@@ -110,14 +110,14 @@ class _EmployeeListViewState extends State<EmployeeListView> {
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.grey,
+                  color: Colors.black,
                 ),
               ),
               const SizedBox(
                 height: 5,
               ),
               const Divider(
-                color: Colors.grey,
+                color: Colors.black,
               ),
               ListTile(
                 onTap: () {
@@ -167,17 +167,17 @@ class _EmployeeListViewState extends State<EmployeeListView> {
                     TextField(
                       controller: txtName,
                       decoration:
-                          const InputDecoration(hintText: 'Enter name*'),
+                          const InputDecoration(labelText: 'Enter name*'),
                     ),
                     TextField(
                       controller: txtNumber,
                       decoration: const InputDecoration(
-                          hintText: 'Enter mobile number*'),
+                          labelText: 'Enter mobile number*'),
                     ),
                     TextField(
                       controller: txtEmail,
                       decoration:
-                          const InputDecoration(hintText: 'Enter email'),
+                          const InputDecoration(labelText: 'Enter email'),
                     ),
                     CheckboxListTile(
                       value: activated,
@@ -297,7 +297,7 @@ class _EmployeeListViewState extends State<EmployeeListView> {
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
-                              color: Colors.grey,
+                              color: Colors.black,
                             ),
                           ),
                           const SizedBox(
@@ -308,7 +308,7 @@ class _EmployeeListViewState extends State<EmployeeListView> {
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
-                              color: Colors.grey,
+                              color: Colors.black,
                             ),
                           ),
                         ],

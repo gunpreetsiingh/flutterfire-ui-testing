@@ -83,7 +83,7 @@ class _FarmersListViewState extends State<FarmersListView> {
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.grey,
+                    color: Colors.black,
                   ),
                 ),
                 const SizedBox(
@@ -94,7 +94,7 @@ class _FarmersListViewState extends State<FarmersListView> {
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.grey,
+                    color: Colors.black,
                   ),
                 ),
                 const SizedBox(
@@ -105,7 +105,7 @@ class _FarmersListViewState extends State<FarmersListView> {
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.grey,
+                    color: Colors.black,
                   ),
                 ),
                 const SizedBox(
@@ -116,7 +116,7 @@ class _FarmersListViewState extends State<FarmersListView> {
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.grey,
+                    color: Colors.black,
                   ),
                 ),
                 const SizedBox(
@@ -127,7 +127,7 @@ class _FarmersListViewState extends State<FarmersListView> {
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.grey,
+                    color: Colors.black,
                   ),
                 ),
                 const SizedBox(
@@ -138,7 +138,7 @@ class _FarmersListViewState extends State<FarmersListView> {
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.grey,
+                    color: Colors.black,
                   ),
                 ),
                 const Divider(),
@@ -171,7 +171,7 @@ class _FarmersListViewState extends State<FarmersListView> {
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.grey,
+                        color: Colors.black,
                       ),
                     ),
                   ],
@@ -208,7 +208,7 @@ class _FarmersListViewState extends State<FarmersListView> {
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.grey,
+                        color: Colors.black,
                       ),
                     ),
                   ],
@@ -221,7 +221,7 @@ class _FarmersListViewState extends State<FarmersListView> {
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.grey,
+                    color: Colors.black,
                   ),
                 ),
                 const SizedBox(
@@ -232,7 +232,7 @@ class _FarmersListViewState extends State<FarmersListView> {
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.grey,
+                    color: Colors.black,
                   ),
                 ),
                 const SizedBox(
@@ -243,7 +243,7 @@ class _FarmersListViewState extends State<FarmersListView> {
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.grey,
+                    color: Colors.black,
                   ),
                 ),
                 const Divider(),
@@ -260,7 +260,7 @@ class _FarmersListViewState extends State<FarmersListView> {
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Colors.grey,
+                      color: Colors.black,
                     ),
                   ),
                 ),
@@ -277,7 +277,7 @@ class _FarmersListViewState extends State<FarmersListView> {
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Colors.grey,
+                      color: Colors.black,
                     ),
                   ),
                 ),
@@ -285,7 +285,7 @@ class _FarmersListViewState extends State<FarmersListView> {
                   height: 5,
                 ),
                 const Divider(
-                  color: Colors.grey,
+                  color: Colors.black,
                 ),
                 ListTile(
                   onTap: () {
@@ -373,7 +373,7 @@ class _FarmersListViewState extends State<FarmersListView> {
                     child: const Text(
                       'Long press to edit farmer details.',
                       style: TextStyle(
-                        color: Colors.grey,
+                        color: Colors.black,
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
                       ),
@@ -435,7 +435,7 @@ class _FarmersListViewState extends State<FarmersListView> {
                                   style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.grey,
+                                    color: Colors.black,
                                   ),
                                 ),
                                 const SizedBox(
@@ -446,7 +446,7 @@ class _FarmersListViewState extends State<FarmersListView> {
                                   style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.grey,
+                                    color: Colors.black,
                                   ),
                                 ),
                                 const SizedBox(
@@ -457,7 +457,7 @@ class _FarmersListViewState extends State<FarmersListView> {
                                   style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.grey,
+                                    color: Colors.black,
                                   ),
                                 ),
                               ],

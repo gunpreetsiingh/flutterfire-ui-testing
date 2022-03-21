@@ -12,9 +12,12 @@ class BatchesListView extends StatefulWidget {
 }
 
 class _BatchesListViewState extends State<BatchesListView> {
-  late QuerySnapshot colBatches;
-  bool isLoading = true, edit = false;
+  late QuerySnapshot colBatches, colEntries;
+  bool isLoading = true, isLoadingTotalValues = true, edit = false;
   String docId = '', employee = '';
+  double totalFeedIntake = 0, totalMortalityTillDate = 0, recentWeight = 0;
+  String recentDateWeight = '';
+  double sc = 0, ac = 0;
 
   @override
   void initState() {
@@ -35,144 +38,230 @@ class _BatchesListViewState extends State<BatchesListView> {
     });
   }
 
+  void loadTotalValues(int index) async {
+    setState(() {
+      isLoadingTotalValues = true;
+    });
+    colEntries = await FirebaseFirestore.instance
+        .collection('entries')
+        .orderBy('date')
+        .get();
+    colEntries.docs.forEach((element) {
+      totalFeedIntake += double.parse(element['feedIntake']);
+      totalMortalityTillDate += double.parse(element['lossQty']);
+      if (element['weight'] != '') {
+        recentWeight = double.parse(element['weight']);
+        recentDateWeight = element['date'];
+      }
+    });
+    var element = colBatches.docs[index];
+    sc = (double.parse(element['scc']) * double.parse(element['qty'])) +
+        (double.parse(element['sfc']) * totalFeedIntake);
+    sc = sc /
+        (recentWeight *
+            double.parse(element['cons']) *
+            (double.parse(element['qty']) - totalMortalityTillDate));
+    ac = (double.parse(element['acc']) * double.parse(element['qty'])) +
+        (double.parse(element['afc']) * totalFeedIntake);
+    ac = ac /
+        (recentWeight *
+            double.parse(element['cons']) *
+            (double.parse(element['qty']) - totalMortalityTillDate));
+    sc = sc * 100;
+    ac = ac * 100;
+    setState(() {
+      isLoadingTotalValues = false;
+    });
+    Navigator.of(context).pop();
+    showEditOptions(index);
+  }
+
   void showEditOptions(int index) {
+    if (isLoadingTotalValues) {
+      loadTotalValues(index);
+    }
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (context) {
-        return Container(
-          padding: const EdgeInsets.all(15),
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(15),
-              topRight: Radius.circular(15),
+        return StatefulBuilder(builder: (context, setState) {
+          return Container(
+            padding: const EdgeInsets.all(15),
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(15),
+                topRight: Radius.circular(15),
+              ),
             ),
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Code: ${colBatches.docs[index]['code']}',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Name: ${colBatches.docs[index]['name']}',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Farmer Code: ${colBatches.docs[index]['farmerCode']}',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Farmer Name: ${colBatches.docs[index]['farmerName']}',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Qty: ${colBatches.docs[index]['qty']}',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'From Date: ${colBatches.docs[index]['fromDate']}',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Ending Date: ${colBatches.docs[index]['endingDate']}',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
-                  ),
-                ),
-                const Divider(
-                  color: Colors.grey,
-                ),
-                ListTile(
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    setState(() {
-                      docId = colBatches.docs[index].id;
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => NewBatch(
-                            true,
-                            docId,
-                            BatchDataModel(
-                              code: colBatches.docs[index]['code'],
-                              name: colBatches.docs[index]['name'],
-                              farmerCode: colBatches.docs[index]['farmerCode'],
-                              farmerName: colBatches.docs[index]['farmerName'],
-                              qty: colBatches.docs[index]['qty'],
-                              fromDate: colBatches.docs[index]['fromDate'],
-                              endingDate: colBatches.docs[index]['endingDate'],
-                              employee: colBatches.docs[index]['employee'],
-                            ),
-                          ),
-                        ),
-                      );
-                    });
-                  },
-                  leading: const Icon(
-                    Icons.edit_rounded,
-                    color: Colors.black,
-                  ),
-                  title: const Text(
-                    'Edit batch details',
-                    style: TextStyle(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Code: ${colBatches.docs[index]['code']}',
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Name: ${colBatches.docs[index]['name']}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Farmer Code: ${colBatches.docs[index]['farmerCode']}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Farmer Name: ${colBatches.docs[index]['farmerName']}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Qty: ${colBatches.docs[index]['qty']}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'SC: ${sc.toStringAsFixed(2)}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'AC: ${ac.toStringAsFixed(2)}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Ending Date: ${colBatches.docs[index]['endingDate']}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Ending Date: ${colBatches.docs[index]['endingDate']}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const Divider(
+                    color: Colors.black,
+                  ),
+                  isLoadingTotalValues
+                      ? CircularProgressIndicator()
+                      : Text(
+                          'Total Feed Intake: ${totalFeedIntake.toStringAsFixed(4)}\nTotal Mortality Till Date: $totalMortalityTillDate\nWeight: $recentWeight Kg [$recentDateWeight]',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                  const Divider(
+                    color: Colors.black,
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      setState(() {
+                        docId = colBatches.docs[index].id;
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => NewBatch(
+                              true,
+                              docId,
+                              BatchDataModel(
+                                code: colBatches.docs[index]['code'],
+                                name: colBatches.docs[index]['name'],
+                                farmerCode: colBatches.docs[index]
+                                    ['farmerCode'],
+                                farmerName: colBatches.docs[index]
+                                    ['farmerName'],
+                                qty: colBatches.docs[index]['qty'],
+                                fromDate: colBatches.docs[index]['fromDate'],
+                                endingDate: colBatches.docs[index]
+                                    ['endingDate'],
+                                employee: colBatches.docs[index]['employee'],
+                                scc: colBatches.docs[index]['scc'],
+                                sfc: colBatches.docs[index]['sfc'],
+                                acc: colBatches.docs[index]['acc'],
+                                afc: colBatches.docs[index]['afc'],
+                                cons: colBatches.docs[index]['cons'],
+                              ),
+                            ),
+                          ),
+                        );
+                      });
+                    },
+                    leading: const Icon(
+                      Icons.edit_rounded,
+                      color: Colors.black,
+                    ),
+                    title: const Text(
+                      'Edit batch details',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        );
+          );
+        });
       },
     );
   }
@@ -191,7 +280,7 @@ class _BatchesListViewState extends State<BatchesListView> {
               builder: (context) => NewBatch(false, '', BatchDataModel())));
         },
         child: const Icon(
-          Icons.person_add_alt_1_outlined,
+          Icons.add_rounded,
           color: Colors.white,
         ),
       ),
@@ -209,7 +298,7 @@ class _BatchesListViewState extends State<BatchesListView> {
                     child: const Text(
                       'Long press to edit batch details.',
                       style: TextStyle(
-                        color: Colors.grey,
+                        color: Colors.black,
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
                       ),
@@ -235,7 +324,11 @@ class _BatchesListViewState extends State<BatchesListView> {
                               ]),
                           child: ListTile(
                             onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => BatchEntries(colBatches.docs[index]['code'], colBatches.docs[index]['qty'], colBatches.docs[index]['fromDate'])));
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => BatchEntries(
+                                      colBatches.docs[index]['code'],
+                                      colBatches.docs[index]['qty'],
+                                      colBatches.docs[index]['fromDate'])));
                             },
                             onLongPress: () {
                               showEditOptions(index);
@@ -250,7 +343,7 @@ class _BatchesListViewState extends State<BatchesListView> {
                                   style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.grey,
+                                    color: Colors.black,
                                   ),
                                 ),
                                 const SizedBox(
@@ -261,7 +354,7 @@ class _BatchesListViewState extends State<BatchesListView> {
                                   style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.grey,
+                                    color: Colors.black,
                                   ),
                                 ),
                                 const SizedBox(
@@ -272,7 +365,7 @@ class _BatchesListViewState extends State<BatchesListView> {
                                   style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.grey,
+                                    color: Colors.black,
                                   ),
                                 ),
                                 const SizedBox(
@@ -283,7 +376,7 @@ class _BatchesListViewState extends State<BatchesListView> {
                                   style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.grey,
+                                    color: Colors.black,
                                   ),
                                 ),
                               ],

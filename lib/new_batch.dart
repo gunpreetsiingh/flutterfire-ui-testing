@@ -24,6 +24,11 @@ class NewBatch extends StatefulWidget {
 class _NewBatchState extends State<NewBatch> {
   var txtName = TextEditingController();
   var txtQty = TextEditingController();
+  var txtSCC = TextEditingController();
+  var txtSFC = TextEditingController();
+  var txtACC = TextEditingController();
+  var txtAFC = TextEditingController();
+  var txtCons = TextEditingController();
   String txtFromDate = 'Enter from date';
   String txtEndingDate = 'Enter ending date';
   var txtEmployee = TextEditingController();
@@ -59,6 +64,11 @@ class _NewBatchState extends State<NewBatch> {
       txtFromDate = widget.batchDataModel.fromDate!;
       txtEndingDate = widget.batchDataModel.endingDate!;
       txtEmployee.text = widget.batchDataModel.employee!;
+      txtSCC.text = widget.batchDataModel.scc!;
+      txtSFC.text = widget.batchDataModel.sfc!;
+      txtACC.text = widget.batchDataModel.acc!;
+      txtAFC.text = widget.batchDataModel.afc!;
+      txtCons.text = widget.batchDataModel.cons!;
       employees.forEach((element) {
         if (element.startsWith(employeeCode)) {
           dropDownValue = element;
@@ -77,6 +87,11 @@ class _NewBatchState extends State<NewBatch> {
       'fromDate': txtFromDate,
       'endingDate': txtEndingDate,
       'employee': employeeCode,
+      'scc': txtSCC.text,
+      'sfc': txtSFC.text,
+      'acc': txtACC.text,
+      'afc': txtAFC.text,
+      'cons': txtCons.text,
     });
     Navigator.of(context).pop();
   }
@@ -113,7 +128,8 @@ class _NewBatchState extends State<NewBatch> {
               TextField(
                 controller: txtName,
                 enabled: isAdmin,
-                decoration: const InputDecoration(hintText: 'Enter batch name'),
+                decoration:
+                    const InputDecoration(labelText: 'Enter batch name'),
               ),
               Visibility(
                 visible: isAdmin,
@@ -141,7 +157,7 @@ class _NewBatchState extends State<NewBatch> {
               TextField(
                 controller: txtQty,
                 enabled: isAdmin,
-                decoration: const InputDecoration(hintText: 'Enter qty'),
+                decoration: const InputDecoration(labelText: 'Enter qty'),
               ),
               GestureDetector(
                 onTap: () async {
@@ -215,6 +231,36 @@ class _NewBatchState extends State<NewBatch> {
                     );
                   }).toList(),
                 ),
+              ),
+              TextField(
+                controller: txtSCC,
+                enabled: isAdmin,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(labelText: 'Enter SCC'),
+              ),
+              TextField(
+                controller: txtSFC,
+                enabled: isAdmin,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(labelText: 'Enter SFC'),
+              ),
+              TextField(
+                controller: txtACC,
+                enabled: isAdmin,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(labelText: 'Enter ACC'),
+              ),
+              TextField(
+                controller: txtAFC,
+                enabled: isAdmin,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(labelText: 'Enter AFC'),
+              ),
+              TextField(
+                controller: txtCons,
+                enabled: isAdmin,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(labelText: 'Enter Cons (%)'),
               ),
               const SizedBox(
                 height: 100,
