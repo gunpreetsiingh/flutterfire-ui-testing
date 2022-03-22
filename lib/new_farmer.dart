@@ -13,9 +13,10 @@ import 'package:multiselect/multiselect.dart';
 
 class NewFarmer extends StatefulWidget {
   bool edit;
-  String docId;
+  String docId, farmerCode;
   FarmerDataModel farmerDataModel;
-  NewFarmer(this.edit, this.docId, this.farmerDataModel, {Key? key})
+  NewFarmer(this.farmerCode, this.edit, this.docId, this.farmerDataModel,
+      {Key? key})
       : super(key: key);
 
   @override
@@ -48,7 +49,7 @@ class _NewFarmerState extends State<NewFarmer> {
     super.initState();
     if (!widget.edit) {
       setState(() {
-        code = 'F' + generateRandomCode();
+        code = widget.farmerCode;
       });
     } else {
       prepare();
@@ -95,11 +96,6 @@ class _NewFarmerState extends State<NewFarmer> {
       'timestamp': DateTime.now().toString(),
     });
     Navigator.of(context).pop();
-  }
-
-  String generateRandomCode() {
-    int num = Random().nextInt(10000);
-    return num.toString();
   }
 
   Future pickImage(bool panId) async {

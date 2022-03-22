@@ -16,9 +16,9 @@ class FarmersListView extends StatefulWidget {
 }
 
 class _FarmersListViewState extends State<FarmersListView> {
-  late QuerySnapshot colFarmers;
+  late QuerySnapshot colFarmers, colFarmersByDate;
   bool isLoading = true, edit = false;
-  String docId = '', employee = '';
+  String docId = '', employee = '', newFarmerCode = '';
 
   @override
   void initState() {
@@ -34,6 +34,17 @@ class _FarmersListViewState extends State<FarmersListView> {
         .collection('farmers')
         .orderBy('name')
         .get();
+    colFarmersByDate = await FirebaseFirestore.instance
+        .collection('farmers')
+        .orderBy('code', descending: true)
+        .limit(1)
+        .get();
+    if (colFarmersByDate.docs.isEmpty) {
+      newFarmerCode = 'F1000';
+    } else {
+      newFarmerCode =
+          'F' + (int.parse(colFarmersByDate.docs.first['code'].substring(1, colFarmersByDate.docs.first['code'].length)) + 1).toString();
+    }
     setState(() {
       isLoading = false;
     });
@@ -295,6 +306,7 @@ class _FarmersListViewState extends State<FarmersListView> {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => NewFarmer(
+                            newFarmerCode,
                             true,
                             docId,
                             FarmerDataModel(
@@ -352,7 +364,7 @@ class _FarmersListViewState extends State<FarmersListView> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => NewFarmer(false, '', FarmerDataModel())));
+              builder: (context) => NewFarmer(newFarmerCode, false, '', FarmerDataModel())));
         },
         child: const Icon(
           Icons.person_add_alt_1_outlined,

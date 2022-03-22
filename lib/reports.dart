@@ -113,7 +113,7 @@ class _ReportsState extends State<Reports> {
     });
     QuerySnapshot colBatches = await FirebaseFirestore.instance
         .collection('batches')
-        .orderBy('name')
+        .orderBy('fromDate')
         .get();
     Sheet sheetObject = excel['Sheet1'];
     List<String> data = [

@@ -1,11 +1,40 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui_testing/dashboard.dart';
 import 'package:flutterfire_ui_testing/dashboard_admin.dart';
 
-class AuthGate extends StatelessWidget {
+class AuthGate extends StatefulWidget {
   const AuthGate({Key? key}) : super(key: key);
+
+  @override
+  State<AuthGate> createState() => _AuthGateState();
+}
+
+class _AuthGateState extends State<AuthGate> {
+  bool isLoading = true;
+  late QuerySnapshot colAdmins;
+  List<String> listAdminEmails = [];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loadAdminEmails();
+  }
+
+  void loadAdminEmails() async {
+    setState(() {
+      isLoading = true;
+    });
+    colAdmins = await FirebaseFirestore.instance.collection('admins').get();
+    colAdmins.docs.forEach((element) {
+      listAdminEmails.add(element['email']);
+    });
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +52,9 @@ class AuthGate extends StatelessWidget {
                   ],
                 );
               }
-              if (FirebaseAuth.instance.currentUser!.email ==
-                  'qg.rickfeed@gmail.com') return const DashboardAdmin();
+              if (listAdminEmails
+                  .contains(FirebaseAuth.instance.currentUser!.email))
+                return const DashboardAdmin();
               return const Dashboard();
             },
           );

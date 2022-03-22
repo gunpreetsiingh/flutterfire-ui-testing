@@ -35,11 +35,11 @@ class _BatchEntriesState extends State<BatchEntries> {
         .get();
     colVisits = await FirebaseFirestore.instance
         .collection('entries')
-        .orderBy('date')
+        .orderBy('date', descending: true)
         .get();
     colSales = await FirebaseFirestore.instance
         .collection('sales')
-        .orderBy('date')
+        .orderBy('date', descending: true)
         .get();
     setState(() {
       isLoading = false;

@@ -18,6 +18,7 @@ class _BatchesListViewState extends State<BatchesListView> {
   double totalFeedIntake = 0, totalMortalityTillDate = 0, recentWeight = 0;
   String recentDateWeight = '';
   double sc = 0, ac = 0;
+  String newBatchCode = '';
 
   @override
   void initState() {
@@ -31,8 +32,23 @@ class _BatchesListViewState extends State<BatchesListView> {
     });
     colBatches = await FirebaseFirestore.instance
         .collection('batches')
-        .orderBy('name')
+        .orderBy('code', descending: true)
         .get();
+    DateTime dateOld = DateTime.utc(2000, 1, 1);
+    colBatches.docs.forEach((element) {
+      if (dateOld.isBefore(DateTime.parse(element['fromDate']))) {
+        dateOld = DateTime.parse(element['fromDate']);
+        newBatchCode = 'B' +
+            (int.parse(element['code'].substring(1, element['code'].length)) +
+                    1)
+                .toString();
+      }
+    });
+    if (colBatches.docs.isEmpty) {
+      setState(() {
+        newBatchCode = 'B10000';
+      });
+    }
     setState(() {
       isLoading = false;
     });
@@ -177,7 +193,7 @@ class _BatchesListViewState extends State<BatchesListView> {
                     height: 10,
                   ),
                   Text(
-                    'Ending Date: ${colBatches.docs[index]['endingDate']}',
+                    'From Date: ${colBatches.docs[index]['fromDate']}',
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -219,6 +235,7 @@ class _BatchesListViewState extends State<BatchesListView> {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => NewBatch(
+                              newBatchCode,
                               true,
                               docId,
                               BatchDataModel(
@@ -276,8 +293,11 @@ class _BatchesListViewState extends State<BatchesListView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => NewBatch(false, '', BatchDataModel())));
+          if (!isLoading) {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) =>
+                    NewBatch(newBatchCode, false, '', BatchDataModel())));
+          }
         },
         child: const Icon(
           Icons.add_rounded,

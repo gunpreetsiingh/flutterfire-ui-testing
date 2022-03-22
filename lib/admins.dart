@@ -9,17 +9,17 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 
-class Reasons extends StatefulWidget {
-  Reasons({Key? key}) : super(key: key);
+class Admins extends StatefulWidget {
+  Admins({Key? key}) : super(key: key);
 
   @override
-  State<Reasons> createState() => _ReasonsState();
+  State<Admins> createState() => _AdminsState();
 }
 
-class _ReasonsState extends State<Reasons> {
-  var txtReason = TextEditingController();
+class _AdminsState extends State<Admins> {
+  var txtEmail = TextEditingController();
   bool isLoading = true;
-  late QuerySnapshot colReasons;
+  late QuerySnapshot colAdmins;
 
   @override
   void initState() {
@@ -32,18 +32,18 @@ class _ReasonsState extends State<Reasons> {
     setState(() {
       isLoading = true;
     });
-    colReasons = await FirebaseFirestore.instance
-        .collection('reasons')
-        .orderBy('reason')
+    colAdmins = await FirebaseFirestore.instance
+        .collection('admins')
+        .orderBy('email')
         .get();
     setState(() {
       isLoading = false;
     });
   }
 
-  void saveReason() {
-    FirebaseFirestore.instance.collection('reasons').doc().set({
-      'reason': txtReason.text,
+  void saveAdmin() {
+    FirebaseFirestore.instance.collection('admins').doc().set({
+      'email': txtEmail.text,
     });
     Navigator.of(context).pop();
   }
@@ -54,8 +54,9 @@ class _ReasonsState extends State<Reasons> {
         builder: (context) {
           return AlertDialog(
             content: TextField(
-              controller: txtReason,
-              decoration: const InputDecoration(labelText: 'Enter reason'),
+              controller: txtEmail,
+              decoration:
+                  const InputDecoration(labelText: 'Enter email of admin'),
             ),
             actions: [
               TextButton(
@@ -66,7 +67,7 @@ class _ReasonsState extends State<Reasons> {
               ),
               TextButton(
                 onPressed: () {
-                  saveReason();
+                  saveAdmin();
                   Navigator.of(context).pop();
                   loadData();
                 },
@@ -82,7 +83,7 @@ class _ReasonsState extends State<Reasons> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Reasons',
+          'Admin Emails',
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -101,7 +102,7 @@ class _ReasonsState extends State<Reasons> {
           : SizedBox(
               height: MediaQuery.of(context).size.height - 106,
               child: ListView.builder(
-                itemCount: colReasons.docs.length,
+                itemCount: colAdmins.docs.length,
                 itemBuilder: (context, index) {
                   return Container(
                     margin: const EdgeInsets.only(top: 10),
@@ -117,14 +118,22 @@ class _ReasonsState extends State<Reasons> {
                           )
                         ]),
                     child: ListTile(
-                      title: Text(colReasons.docs[index]['reason']),
+                      title: Text(colAdmins.docs[index]['email']),
                       trailing: IconButton(
                         onPressed: () async {
-                          await FirebaseFirestore.instance
-                              .collection('reasons')
-                              .doc(colReasons.docs[index].id)
-                              .delete();
-                          loadData();
+                          if (colAdmins.docs.length == 1) {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                              backgroundColor: Colors.red,
+                              content: Text('One admin is mandatory.'),
+                            ));
+                          } else {
+                            await FirebaseFirestore.instance
+                                .collection('admins')
+                                .doc(colAdmins.docs[index].id)
+                                .delete();
+                            loadData();
+                          }
                         },
                         icon: const Icon(
                           Icons.delete_outlined,

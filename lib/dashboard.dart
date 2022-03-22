@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui_testing/batch_entries.dart';
 import 'package:flutterfire_ui_testing/farmer_data_model.dart';
@@ -28,8 +29,8 @@ class _DashboardState extends State<Dashboard> {
   var txtLossQty = TextEditingController();
   var txtReason = TextEditingController();
   String tokenId = '', code = '';
-  bool isLoading = true;
-  late QuerySnapshot colBatches, colEmployee;
+  bool isLoading = true, showError = false;
+  late QuerySnapshot colBatches, colEmployee, colEmployees;
   String imageUrl = '', employeeCode = '';
 
   final FirebaseStorage _storage = FirebaseStorage.instance;
@@ -41,7 +42,6 @@ class _DashboardState extends State<Dashboard> {
   void initState() {
     super.initState();
     checkName();
-    loadData();
   }
 
   void loadData() async {
@@ -49,16 +49,26 @@ class _DashboardState extends State<Dashboard> {
       isLoading = true;
     });
     await checkLocationPermissions();
-    colBatches = await FirebaseFirestore.instance
-        .collection('batches')
-        .orderBy('name')
-        .get();
     colEmployee = await FirebaseFirestore.instance
         .collection('employees')
         .where('email', isEqualTo: FirebaseAuth.instance.currentUser!.email)
         .get();
+    colEmployees = await FirebaseFirestore.instance
+        .collection('employees')
+        .orderBy('code', descending: true)
+        .limit(1)
+        .get();
+    colBatches = await FirebaseFirestore.instance
+        .collection('batches')
+        .orderBy('farmerName')
+        .get();
     setState(() {
       employeeCode = colEmployee.docs.first['code'];
+      if (colEmployee.docs.first['activated']) {
+        showError = false;
+      } else {
+        showError = true;
+      }
       isLoading = false;
     });
   }
@@ -86,24 +96,28 @@ class _DashboardState extends State<Dashboard> {
 
   void checkName() async {
     await Future.delayed(Duration.zero);
-    if (Platform.isAndroid) {
-      var status = await OneSignal.shared.getDeviceState();
-      tokenId = status!.userId!;
+    if (!kIsWeb) {
+      if (Platform.isAndroid) {
+        var status = await OneSignal.shared.getDeviceState();
+        tokenId = status!.userId!;
+      }
     }
     if (FirebaseAuth.instance.currentUser!.displayName == null ||
         FirebaseAuth.instance.currentUser!.displayName!.trim() == '') {
       confirmName();
+    } else {
+      loadData();
     }
-  }
-
-  String generateRandomCode() {
-    int num = Random().nextInt(10000);
-    return num.toString();
   }
 
   void confirmName() async {
     setState(() {
-      code = 'E' + generateRandomCode();
+      if (colEmployees.docs.isEmpty) {
+        code = 'E100';
+      } else {
+        code =
+            'E' + (int.parse(colEmployees.docs.first['code'].substring(1, colEmployees.docs.first['code'].length)) + 1).toString();
+      }
     });
     await showDialog(
       context: context,
@@ -144,7 +158,7 @@ class _DashboardState extends State<Dashboard> {
                       'image': '',
                       'email': FirebaseAuth.instance.currentUser!.email,
                       'token': tokenId,
-                      'activated': true,
+                      'activated': false,
                     },
                   );
                 }
@@ -207,98 +221,112 @@ class _DashboardState extends State<Dashboard> {
             ? const Center(
                 child: CircularProgressIndicator(),
               )
-            : Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(top: 10),
-                      child: const Text(
-                        'Tap on a batch to edit details.',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
+            : showError
+                ? const Text('Your account is not yet activated!')
+                : Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(top: 10),
+                          child: const Text(
+                            'Tap on a batch to edit details.',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
-                      ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height - 106,
+                          child: ListView.builder(
+                            itemCount: colBatches.docs.length,
+                            itemBuilder: (context, index) {
+                              if (DateTime.parse(
+                                          colBatches.docs[index]['endingDate'])
+                                      .isAfter(DateTime.now()) &&
+                                  colBatches.docs[index]['employee'] ==
+                                      colEmployee.docs.first['code'] +
+                                          '-' +
+                                          colEmployee.docs.first['name']) {
+                                return Container(
+                                  margin: const EdgeInsets.only(top: 10),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 5),
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.15),
+                                          blurRadius: 5,
+                                          spreadRadius: 5,
+                                        )
+                                      ]),
+                                  child: ListTile(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  BatchEntries(
+                                                      colBatches.docs[index]
+                                                          ['code'],
+                                                      colBatches.docs[index]
+                                                          ['qty'],
+                                                      colBatches.docs[index]
+                                                          ['fromDate'])));
+                                    },
+                                    title: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          'Batch Name: ${colBatches.docs[index]['name']}',
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(
+                                          'Farmer Name: ${colBatches.docs[index]['farmerName']}',
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(
+                                          'Qty: ${colBatches.docs[index]['qty']}',
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }
+                              return Container();
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height - 106,
-                      child: ListView.builder(
-                        itemCount: colBatches.docs.length,
-                        itemBuilder: (context, index) {
-                          if (DateTime.parse(
-                                  colBatches.docs[index]['endingDate'])
-                              .isAfter(DateTime.now())) {
-                            return Container(
-                              margin: const EdgeInsets.only(top: 10),
-                              padding: const EdgeInsets.symmetric(vertical: 5),
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.15),
-                                      blurRadius: 5,
-                                      spreadRadius: 5,
-                                    )
-                                  ]),
-                              child: ListTile(
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => BatchEntries(
-                                          colBatches.docs[index]['code'],
-                                          colBatches.docs[index]['qty'],
-                                          colBatches.docs[index]['fromDate'])));
-                                },
-                                title: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      'Batch Name: ${colBatches.docs[index]['name']}',
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(
-                                      'Farmer Name: ${colBatches.docs[index]['farmerName']}',
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(
-                                      'Qty: ${colBatches.docs[index]['qty']}',
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          }
-                          return Container();
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                  ),
       ),
     );
   }

@@ -9,12 +9,14 @@ import 'package:flutterfire_ui_testing/batch_data_model.dart';
 import 'package:flutterfire_ui_testing/main.dart';
 import 'package:flutterfire_ui_testing/view_image.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 class NewBatch extends StatefulWidget {
   bool edit;
-  String docId;
+  String docId, batchCode;
   BatchDataModel batchDataModel;
-  NewBatch(this.edit, this.docId, this.batchDataModel, {Key? key})
+  NewBatch(this.batchCode, this.edit, this.docId, this.batchDataModel,
+      {Key? key})
       : super(key: key);
 
   @override
@@ -47,7 +49,7 @@ class _NewBatchState extends State<NewBatch> {
     super.initState();
     if (!widget.edit) {
       setState(() {
-        code = 'B' + generateRandomCode();
+        code = widget.batchCode;
       });
     } else {
       prepare();
@@ -84,8 +86,8 @@ class _NewBatchState extends State<NewBatch> {
       'farmerCode': fCode,
       'farmerName': fName,
       'qty': txtQty.text,
-      'fromDate': txtFromDate,
-      'endingDate': txtEndingDate,
+      'fromDate': txtFromDate == 'Enter from date' ? DateFormat('yyyy-MM-dd').format(DateTime.now()) : txtFromDate,
+      'endingDate': txtEndingDate == 'Enter ending date' ? DateFormat('yyyy-MM-dd').format(DateTime.now()) : txtEndingDate,
       'employee': employeeCode,
       'scc': txtSCC.text,
       'sfc': txtSFC.text,

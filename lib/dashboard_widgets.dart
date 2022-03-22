@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterfire_ui_testing/admins.dart';
 import 'package:flutterfire_ui_testing/batches_listview.dart';
 import 'package:flutterfire_ui_testing/employee_listview.dart';
 import 'package:flutterfire_ui_testing/farmers_listview.dart';
 import 'package:flutterfire_ui_testing/main.dart';
+import 'package:flutterfire_ui_testing/reasons.dart';
 import 'package:flutterfire_ui_testing/reports.dart';
 
 class DashboardWidgets extends StatefulWidget {
@@ -14,8 +16,16 @@ class DashboardWidgets extends StatefulWidget {
 }
 
 class _DashboardWidgetsState extends State<DashboardWidgets> {
-  late QuerySnapshot colFarmers, colEmployees, colBatches;
-  int totalFarmers = 0, totalEmployees = 0, totalBatches = 0;
+  late QuerySnapshot colFarmers,
+      colEmployees,
+      colBatches,
+      colReasons,
+      colAdmins;
+  int totalFarmers = 0,
+      totalEmployees = 0,
+      totalBatches = 0,
+      totalReasons = 0,
+      totalAdmins = 0;
   bool loadingData = true;
   @override
   void initState() {
@@ -39,6 +49,14 @@ class _DashboardWidgetsState extends State<DashboardWidgets> {
     colBatches = await FirebaseFirestore.instance
         .collection('batches')
         .orderBy('name')
+        .get();
+    colReasons = await FirebaseFirestore.instance
+        .collection('reasons')
+        .orderBy('reason')
+        .get();
+    colAdmins = await FirebaseFirestore.instance
+        .collection('admins')
+        .orderBy('email')
         .get();
     // employees.add('Select employee');
     // employeesToken.add('Select employee token');
@@ -66,6 +84,8 @@ class _DashboardWidgetsState extends State<DashboardWidgets> {
       totalFarmers = colFarmers.docs.length;
       totalEmployees = colEmployees.docs.length;
       totalBatches = colBatches.docs.length;
+      totalReasons = colReasons.docs.length;
+      totalAdmins = colAdmins.docs.length;
       loadingData = false;
     });
   }
@@ -316,6 +336,132 @@ class _DashboardWidgetsState extends State<DashboardWidgets> {
                         child: const Icon(
                           Icons.analytics_outlined,
                           color: Colors.red,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (contetx) => Reasons()));
+            },
+            child: Container(
+              height: 107,
+              width: 177,
+              padding: const EdgeInsets.all(15),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Colors.purple.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Reasons',
+                    style: TextStyle(
+                      color: Colors.purple,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: Colors.purple,
+                              width: 2,
+                            )),
+                        child: const Icon(
+                          Icons.article_outlined,
+                          color: Colors.purple,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        '$totalReasons',
+                        style: TextStyle(
+                          color: Colors.purple,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (contetx) => Admins()));
+            },
+            child: Container(
+              height: 107,
+              width: 177,
+              padding: const EdgeInsets.all(15),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Colors.blueGrey.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Admins',
+                    style: TextStyle(
+                      color: Colors.blueGrey,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: Colors.blueGrey,
+                              width: 2,
+                            )),
+                        child: const Icon(
+                          Icons.article_outlined,
+                          color: Colors.blueGrey,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        '$totalAdmins',
+                        style: TextStyle(
+                          color: Colors.blueGrey,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],

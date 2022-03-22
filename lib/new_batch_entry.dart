@@ -235,6 +235,10 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
                       },
                       child: Text(
                         'Date: $date',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
                     const SizedBox(
@@ -242,18 +246,30 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
                     ),
                     Text(
                       'Employee Code: $eCode',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
                     ),
                     const SizedBox(
                       height: 5,
                     ),
                     Text(
                       'Employee Name: $eName',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
                     ),
                     const SizedBox(
                       height: 5,
                     ),
                     Text(
                       'Location: $location',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
                     ),
                     const SizedBox(
                       height: 5,
@@ -357,7 +373,13 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
                     const SizedBox(
                       height: 5,
                     ),
-                    Text('Mortality Till Date: $mortalityTillDate'),
+                    Text(
+                      'Mortality Till Date: $mortalityTillDate',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
                     const SizedBox(
                       height: 5,
                     ),

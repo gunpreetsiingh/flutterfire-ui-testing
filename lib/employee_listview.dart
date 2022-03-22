@@ -206,7 +206,7 @@ class _EmployeeListViewState extends State<EmployeeListView> {
                         FirebaseFirestore.instance
                             .collection('employees')
                             .doc(edit ? docId : null)
-                            .set(
+                            .update(
                           {
                             'name': txtName.text,
                             'number': txtNumber.text,
