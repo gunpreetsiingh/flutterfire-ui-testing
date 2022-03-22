@@ -41,6 +41,7 @@ dependencies:
   image_picker: ^0.8.4+8
   multiselect: ^0.0.4
   location: ^4.3.0
+  excel: ^2.0.0-null-safety-3
 
 dev_dependencies:
   flutter_lints: ^1.0.0

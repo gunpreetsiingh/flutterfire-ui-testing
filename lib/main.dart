@@ -11,6 +11,7 @@ List<String> batches = [];
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
   OneSignal.shared.setAppId("28caf8a7-aa7f-46e5-adff-bc09e0881cc2");
   OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {

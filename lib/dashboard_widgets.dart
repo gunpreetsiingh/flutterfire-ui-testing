@@ -4,6 +4,7 @@ import 'package:flutterfire_ui_testing/batches_listview.dart';
 import 'package:flutterfire_ui_testing/employee_listview.dart';
 import 'package:flutterfire_ui_testing/farmers_listview.dart';
 import 'package:flutterfire_ui_testing/main.dart';
+import 'package:flutterfire_ui_testing/reports.dart';
 
 class DashboardWidgets extends StatefulWidget {
   const DashboardWidgets({Key? key}) : super(key: key);
@@ -263,6 +264,58 @@ class _DashboardWidgetsState extends State<DashboardWidgets> {
                           color: Colors.blue,
                           fontSize: 30,
                           fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (contetx) => Reports()));
+            },
+            child: Container(
+              height: 107,
+              width: 177,
+              padding: const EdgeInsets.all(15),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Colors.red.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Generate Reports',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: Colors.red,
+                              width: 2,
+                            )),
+                        child: const Icon(
+                          Icons.analytics_outlined,
+                          color: Colors.red,
                         ),
                       ),
                     ],

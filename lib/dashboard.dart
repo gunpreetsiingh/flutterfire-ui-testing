@@ -144,6 +144,7 @@ class _DashboardState extends State<Dashboard> {
                       'image': '',
                       'email': FirebaseAuth.instance.currentUser!.email,
                       'token': tokenId,
+                      'activated': true,
                     },
                   );
                 }

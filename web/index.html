@@ -100,5 +100,23 @@
       loadMainDartJs();
     }
   </script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  <script>
+    var firebaseConfig = {
+      apiKey: "AIzaSyDdcT4cSaVpHIlzxa6ycDNFW9FYgN4b6xI",
+      authDomain: "rickfeed-chicks.firebaseapp.com",
+      projectId: "rickfeed-chicks",
+      storageBucket: "rickfeed-chicks.appspot.com",
+      messagingSenderId: "128315909385",
+      appId: "1:128315909385:web:fdbcf85ea79ac7c9d5dfd8",
+      measurementId: "G-SZM7L8RC9G"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+  </script>
 </body>
 </html>
