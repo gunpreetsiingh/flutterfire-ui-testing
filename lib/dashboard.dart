@@ -237,6 +237,18 @@ class _DashboardState extends State<Dashboard> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        const SizedBox(height: 10),
+                        Text(
+                          'Welcome ${FirebaseAuth.instance.currentUser!.displayName!}!',
+                          style: const TextStyle(
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
                         Container(
                           margin: const EdgeInsets.only(top: 10),
                           child: const Text(
@@ -249,7 +261,7 @@ class _DashboardState extends State<Dashboard> {
                           ),
                         ),
                         SizedBox(
-                          height: MediaQuery.of(context).size.height - 106,
+                          height: MediaQuery.of(context).size.height - 128,
                           child: ListView.builder(
                             itemCount: colBatches.docs.length,
                             itemBuilder: (context, index) {

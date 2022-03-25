@@ -119,7 +119,21 @@ class _DashboardAdminState extends State<DashboardAdmin> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: const [SizedBox(height: 10), DashboardWidgets()],
+            children: [
+              const SizedBox(height: 10),
+              Text(
+                'Welcome ${FirebaseAuth.instance.currentUser!.displayName!}!',
+                style: const TextStyle(
+                  color: Colors.blue,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22,
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              DashboardWidgets()
+            ],
           ),
         ),
       ),

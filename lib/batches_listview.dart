@@ -34,20 +34,16 @@ class _BatchesListViewState extends State<BatchesListView> {
         .collection('batches')
         .orderBy('code', descending: true)
         .get();
-    DateTime dateOld = DateTime.utc(2000, 1, 1);
-    colBatches.docs.forEach((element) {
-      if (dateOld.isBefore(DateTime.parse(element['fromDate']))) {
-        dateOld = DateTime.parse(element['fromDate']);
-        newBatchCode = 'B' +
-            (int.parse(element['code'].substring(1, element['code'].length)) +
-                    1)
-                .toString();
-      }
-    });
     if (colBatches.docs.isEmpty) {
       setState(() {
         newBatchCode = 'B10000';
       });
+    } else {
+      newBatchCode = 'B' +
+          (int.parse(colBatches.docs.first['code']
+                      .substring(1, colBatches.docs.first['code'].length)) +
+                  1)
+              .toString();
     }
     setState(() {
       isLoading = false;
@@ -57,17 +53,25 @@ class _BatchesListViewState extends State<BatchesListView> {
   void loadTotalValues(int index) async {
     setState(() {
       isLoadingTotalValues = true;
+      totalFeedIntake = 0;
+      totalMortalityTillDate = 0;
+      recentWeight = 0;
+      recentDateWeight = '';
+      sc = 0;
+      ac = 0;
     });
     colEntries = await FirebaseFirestore.instance
         .collection('entries')
         .orderBy('date')
         .get();
     colEntries.docs.forEach((element) {
-      totalFeedIntake += double.parse(element['feedIntake']);
-      totalMortalityTillDate += double.parse(element['lossQty']);
-      if (element['weight'] != '') {
-        recentWeight = double.parse(element['weight']);
-        recentDateWeight = element['date'];
+      if (element['batch'] == colBatches.docs[index]['code']) {
+        totalFeedIntake += double.parse(element['feedIntake']);
+        totalMortalityTillDate += double.parse(element['lossQty']);
+        if (element['weight'] != '') {
+          recentWeight = double.parse(element['weight']);
+          recentDateWeight = element['date'];
+        }
       }
     });
     var element = colBatches.docs[index];
@@ -354,6 +358,9 @@ class _BatchesListViewState extends State<BatchesListView> {
                                       colBatches.docs[index]['fromDate'])));
                             },
                             onLongPress: () {
+                              setState(() {
+                                isLoadingTotalValues = true;
+                              });
                               showEditOptions(index);
                             },
                             title: Column(

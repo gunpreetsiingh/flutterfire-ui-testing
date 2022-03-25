@@ -103,7 +103,7 @@ class _EmployeeListViewState extends State<EmployeeListView> {
                 ),
               ),
               const SizedBox(
-                height: 5,
+                height: 10,
               ),
               Text(
                 'Activated: ${colEmployees.docs[index]['activated']}',
@@ -114,7 +114,7 @@ class _EmployeeListViewState extends State<EmployeeListView> {
                 ),
               ),
               const SizedBox(
-                height: 5,
+                height: 10,
               ),
               const Divider(
                 color: Colors.black,
@@ -313,6 +313,12 @@ class _EmployeeListViewState extends State<EmployeeListView> {
                           ),
                         ],
                       ),
+                      trailing: colEmployees.docs[index]['activated']
+                          ? null
+                          : const Icon(
+                              Icons.warning_amber_outlined,
+                              color: Colors.amber,
+                            ),
                     ),
                   );
                 },

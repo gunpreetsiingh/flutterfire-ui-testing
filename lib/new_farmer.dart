@@ -80,7 +80,7 @@ class _NewFarmerState extends State<NewFarmer> {
     FirebaseFirestore.instance.collection('farmers').doc(code).set({
       'code': code,
       'images': images,
-      'name': txtName.text,
+      'name': txtName.text[0].toUpperCase() + txtName.text.substring(1, txtName.text.length),
       'number': txtNumber.text,
       'email': txtEmail.text,
       'location': txtLocation.text,

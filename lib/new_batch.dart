@@ -85,15 +85,20 @@ class _NewBatchState extends State<NewBatch> {
       'name': txtName.text,
       'farmerCode': fCode,
       'farmerName': fName,
-      'qty': txtQty.text,
-      'fromDate': txtFromDate == 'Enter from date' ? DateFormat('yyyy-MM-dd').format(DateTime.now()) : txtFromDate,
-      'endingDate': txtEndingDate == 'Enter ending date' ? DateFormat('yyyy-MM-dd').format(DateTime.now().add(const Duration(days: 46))) : txtEndingDate,
+      'qty': txtQty.text == '' ? '0' : txtQty.text,
+      'fromDate': txtFromDate == 'Enter from date'
+          ? DateFormat('yyyy-MM-dd').format(DateTime.now())
+          : txtFromDate,
+      'endingDate': txtEndingDate == 'Enter ending date'
+          ? DateFormat('yyyy-MM-dd')
+              .format(DateTime.now().add(const Duration(days: 46)))
+          : txtEndingDate,
       'employee': employeeCode,
-      'scc': txtSCC.text,
-      'sfc': txtSFC.text,
-      'acc': txtACC.text,
-      'afc': txtAFC.text,
-      'cons': txtCons.text,
+      'scc': txtSCC.text == '' ? '0' : txtSCC.text,
+      'sfc': txtSFC.text == '' ? '0' : txtSFC.text,
+      'acc': txtACC.text == '' ? '0' : txtACC.text,
+      'afc': txtAFC.text == '' ? '0' : txtAFC.text,
+      'cons': txtCons.text == '' ? '0' : txtCons.text,
     });
     Navigator.of(context).pop(true);
   }
@@ -130,8 +135,15 @@ class _NewBatchState extends State<NewBatch> {
               TextField(
                 controller: txtName,
                 enabled: isAdmin,
+                style: const TextStyle(
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black,
+                    fontSize: 22),
                 decoration:
                     const InputDecoration(labelText: 'Enter batch name'),
+              ),
+              const SizedBox(
+                height: 10,
               ),
               Visibility(
                 visible: isAdmin,
@@ -156,10 +168,20 @@ class _NewBatchState extends State<NewBatch> {
                   }).toList(),
                 ),
               ),
+              const SizedBox(
+                height: 10,
+              ),
               TextField(
                 controller: txtQty,
                 enabled: isAdmin,
+                style: const TextStyle(
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black,
+                    fontSize: 22),
                 decoration: const InputDecoration(labelText: 'Enter qty'),
+              ),
+              const SizedBox(
+                height: 10,
               ),
               GestureDetector(
                 onTap: () async {
@@ -169,7 +191,7 @@ class _NewBatchState extends State<NewBatch> {
                           txtFromDate == 'Enter from date'
                               ? DateTime.now().toString()
                               : txtFromDate),
-                      firstDate: DateTime(2000),
+                      firstDate: DateTime(2200),
                       lastDate: DateTime(2100));
                   if (result != null) {
                     setState(() {
@@ -180,11 +202,18 @@ class _NewBatchState extends State<NewBatch> {
                   }
                 },
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  padding: const EdgeInsets.symmetric(vertical: 15),
                   child: Text(
                     txtFromDate,
+                    style: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22),
                   ),
                 ),
+              ),
+              const SizedBox(
+                height: 10,
               ),
               GestureDetector(
                 onTap: () async {
@@ -194,7 +223,7 @@ class _NewBatchState extends State<NewBatch> {
                           txtEndingDate == 'Enter ending date'
                               ? DateTime.now().toString()
                               : txtEndingDate),
-                      firstDate: DateTime(2000),
+                      firstDate: DateTime(2200),
                       lastDate: DateTime(2100));
                   if (result != null) {
                     setState(() {
@@ -205,11 +234,18 @@ class _NewBatchState extends State<NewBatch> {
                   }
                 },
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  padding: const EdgeInsets.symmetric(vertical: 15),
                   child: Text(
                     txtEndingDate,
+                    style: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22),
                   ),
                 ),
+              ),
+              const SizedBox(
+                height: 10,
               ),
               Visibility(
                 visible: isAdmin,
@@ -234,33 +270,68 @@ class _NewBatchState extends State<NewBatch> {
                   }).toList(),
                 ),
               ),
+              const SizedBox(
+                height: 10,
+              ),
               TextField(
                 controller: txtSCC,
                 enabled: isAdmin,
+                style: const TextStyle(
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black,
+                    fontSize: 22),
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(labelText: 'Enter SCC'),
+              ),
+              const SizedBox(
+                height: 10,
               ),
               TextField(
                 controller: txtSFC,
                 enabled: isAdmin,
+                style: const TextStyle(
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black,
+                    fontSize: 22),
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(labelText: 'Enter SFC'),
+              ),
+              const SizedBox(
+                height: 10,
               ),
               TextField(
                 controller: txtACC,
                 enabled: isAdmin,
+                style: const TextStyle(
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black,
+                    fontSize: 22),
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(labelText: 'Enter ACC'),
+              ),
+              const SizedBox(
+                height: 10,
               ),
               TextField(
                 controller: txtAFC,
                 enabled: isAdmin,
+                style: const TextStyle(
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black,
+                    fontSize: 22),
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(labelText: 'Enter AFC'),
+              ),
+              const SizedBox(
+                height: 10,
               ),
               TextField(
                 controller: txtCons,
                 enabled: isAdmin,
+                style: const TextStyle(
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black,
+                    fontSize: 22),
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(labelText: 'Enter Cons (%)'),
               ),
