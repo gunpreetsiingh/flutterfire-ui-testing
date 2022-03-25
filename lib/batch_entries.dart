@@ -60,10 +60,13 @@ class _BatchEntriesState extends State<BatchEntries> {
         mainAxisSize: MainAxisSize.min,
         children: [
           FloatingActionButton(
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
+            onPressed: () async {
+              var response = await Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) =>
                       NewBatchEntry(widget.batchId, false, {})));
+              if (response) {
+                loadBatchEntries();
+              }
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -82,9 +85,12 @@ class _BatchEntriesState extends State<BatchEntries> {
           ),
           FloatingActionButton(
             backgroundColor: Colors.green,
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
+            onPressed: () async {
+              var response = await Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => NewSaleEntry(widget.batchId)));
+              if (response) {
+                loadBatchEntries();
+              }
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,

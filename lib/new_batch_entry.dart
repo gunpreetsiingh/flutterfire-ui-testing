@@ -175,7 +175,7 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
           (mortalityTillDate + double.parse(txtLossQty.text)).toString(),
       'feedToOrder': txtFeedToOrder.text,
     });
-    Navigator.of(context).pop();
+    Navigator.of(context).pop(true);
   }
 
   @override

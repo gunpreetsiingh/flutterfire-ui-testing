@@ -95,7 +95,7 @@ class _NewFarmerState extends State<NewFarmer> {
       'notes': txtNotes.text,
       'timestamp': DateTime.now().toString(),
     });
-    Navigator.of(context).pop();
+    Navigator.of(context).pop(true);
   }
 
   Future pickImage(bool panId) async {

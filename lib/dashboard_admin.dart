@@ -76,9 +76,9 @@ class _DashboardAdminState extends State<DashboardAdmin> {
               child: const Text('Cancel'),
             ),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut();
                 Navigator.of(context).pop();
-                FirebaseAuth.instance.signOut();
               },
               child: const Text('Confirm'),
             ),

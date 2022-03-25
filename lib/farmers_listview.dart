@@ -42,8 +42,11 @@ class _FarmersListViewState extends State<FarmersListView> {
     if (colFarmersByDate.docs.isEmpty) {
       newFarmerCode = 'F1000';
     } else {
-      newFarmerCode =
-          'F' + (int.parse(colFarmersByDate.docs.first['code'].substring(1, colFarmersByDate.docs.first['code'].length)) + 1).toString();
+      newFarmerCode = 'F' +
+          (int.parse(colFarmersByDate.docs.first['code'].substring(
+                      1, colFarmersByDate.docs.first['code'].length)) +
+                  1)
+              .toString();
     }
     setState(() {
       isLoading = false;
@@ -362,9 +365,13 @@ class _FarmersListViewState extends State<FarmersListView> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => NewFarmer(newFarmerCode, false, '', FarmerDataModel())));
+        onPressed: () async {
+          var response = await Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) =>
+                  NewFarmer(newFarmerCode, false, '', FarmerDataModel())));
+          if (response) {
+            loadData();
+          }
         },
         child: const Icon(
           Icons.person_add_alt_1_outlined,

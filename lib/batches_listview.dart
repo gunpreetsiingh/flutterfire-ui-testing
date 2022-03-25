@@ -292,11 +292,14 @@ class _BatchesListViewState extends State<BatchesListView> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
           if (!isLoading) {
-            Navigator.of(context).push(MaterialPageRoute(
+            var response = await Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) =>
                     NewBatch(newBatchCode, false, '', BatchDataModel())));
+            if (response) {
+              loadData();
+            }
           }
         },
         child: const Icon(

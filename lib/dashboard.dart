@@ -44,6 +44,14 @@ class _DashboardState extends State<Dashboard> {
     checkName();
   }
 
+  Future<void> loadExistingEmployees() async {
+    colEmployees = await FirebaseFirestore.instance
+        .collection('employees')
+        .orderBy('code', descending: true)
+        .limit(1)
+        .get();
+  }
+
   void loadData() async {
     setState(() {
       isLoading = true;
@@ -52,11 +60,6 @@ class _DashboardState extends State<Dashboard> {
     colEmployee = await FirebaseFirestore.instance
         .collection('employees')
         .where('email', isEqualTo: FirebaseAuth.instance.currentUser!.email)
-        .get();
-    colEmployees = await FirebaseFirestore.instance
-        .collection('employees')
-        .orderBy('code', descending: true)
-        .limit(1)
         .get();
     colBatches = await FirebaseFirestore.instance
         .collection('batches')
@@ -96,6 +99,7 @@ class _DashboardState extends State<Dashboard> {
 
   void checkName() async {
     await Future.delayed(Duration.zero);
+    await loadExistingEmployees();
     if (!kIsWeb) {
       if (Platform.isAndroid) {
         var status = await OneSignal.shared.getDeviceState();
@@ -115,8 +119,11 @@ class _DashboardState extends State<Dashboard> {
       if (colEmployees.docs.isEmpty) {
         code = 'E100';
       } else {
-        code =
-            'E' + (int.parse(colEmployees.docs.first['code'].substring(1, colEmployees.docs.first['code'].length)) + 1).toString();
+        code = 'E' +
+            (int.parse(colEmployees.docs.first['code']
+                        .substring(1, colEmployees.docs.first['code'].length)) +
+                    1)
+                .toString();
       }
     });
     await showDialog(
@@ -163,6 +170,8 @@ class _DashboardState extends State<Dashboard> {
                   );
                 }
                 Navigator.of(context).pop();
+                loadExistingEmployees();
+                loadData();
               },
               child: const Text('Confirm'),
             ),
@@ -189,9 +198,9 @@ class _DashboardState extends State<Dashboard> {
               child: const Text('Cancel'),
             ),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut();
                 Navigator.of(context).pop();
-                FirebaseAuth.instance.signOut();
               },
               child: const Text('Confirm'),
             ),

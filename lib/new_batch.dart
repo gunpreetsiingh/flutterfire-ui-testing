@@ -87,7 +87,7 @@ class _NewBatchState extends State<NewBatch> {
       'farmerName': fName,
       'qty': txtQty.text,
       'fromDate': txtFromDate == 'Enter from date' ? DateFormat('yyyy-MM-dd').format(DateTime.now()) : txtFromDate,
-      'endingDate': txtEndingDate == 'Enter ending date' ? DateFormat('yyyy-MM-dd').format(DateTime.now()) : txtEndingDate,
+      'endingDate': txtEndingDate == 'Enter ending date' ? DateFormat('yyyy-MM-dd').format(DateTime.now().add(const Duration(days: 46))) : txtEndingDate,
       'employee': employeeCode,
       'scc': txtSCC.text,
       'sfc': txtSFC.text,
@@ -95,7 +95,7 @@ class _NewBatchState extends State<NewBatch> {
       'afc': txtAFC.text,
       'cons': txtCons.text,
     });
-    Navigator.of(context).pop();
+    Navigator.of(context).pop(true);
   }
 
   String generateRandomCode() {
