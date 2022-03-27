@@ -15,7 +15,10 @@ class _BatchesListViewState extends State<BatchesListView> {
   late QuerySnapshot colBatches, colEntries;
   bool isLoading = true, isLoadingTotalValues = true, edit = false;
   String docId = '', employee = '';
-  double totalFeedIntake = 0, totalFeedReceived = 0, totalMortalityTillDate = 0, recentWeight = 0;
+  double totalFeedIntake = 0,
+      totalFeedReceived = 0,
+      totalMortalityTillDate = 0,
+      recentWeight = 0;
   String recentDateWeight = '';
   double sc = 0, ac = 0;
   String newBatchCode = '';
@@ -54,6 +57,7 @@ class _BatchesListViewState extends State<BatchesListView> {
     setState(() {
       isLoadingTotalValues = true;
       totalFeedIntake = 0;
+      totalFeedReceived = 0;
       totalMortalityTillDate = 0;
       recentWeight = 0;
       recentDateWeight = '';
@@ -69,7 +73,7 @@ class _BatchesListViewState extends State<BatchesListView> {
         totalFeedIntake += double.parse(element['feedIntake']);
         totalFeedReceived += double.parse(element['feedToOrder']);
         totalMortalityTillDate += double.parse(element['lossQty']);
-        if (element['weight'] != '') {
+        if (element['weight'] != '0') {
           recentWeight = double.parse(element['weight']) / 1000;
           recentDateWeight = element['date'];
         }
@@ -222,7 +226,7 @@ class _BatchesListViewState extends State<BatchesListView> {
                   isLoadingTotalValues
                       ? CircularProgressIndicator()
                       : Text(
-                          'Total Feed Intake: ${totalFeedIntake.toStringAsFixed(4)}\nTotal Feed Received: ${totalFeedReceived.toStringAsFixed(4)}\nTotal Mortality Till Date: $totalMortalityTillDate\nWeight: $recentWeight grams [$recentDateWeight]',
+                          'Total Feed Intake: ${totalFeedIntake.toStringAsFixed(4)}\nTotal Feed Received: ${totalFeedReceived.toStringAsFixed(4)}\nTotal Mortality Till Date: $totalMortalityTillDate\nWeight: $recentWeight Kg [$recentDateWeight]',
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,

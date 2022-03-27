@@ -145,10 +145,11 @@ class _BatchEntriesState extends State<BatchEntries> {
                                   if (colVisits.docs[index]['batch'] !=
                                       widget.batchId) return Container();
                                   return GestureDetector(
-                                    onTap: () {
+                                    onTap: () async {
                                       if (isAdmin) {
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
+                                        var response = await Navigator.of(
+                                                context)
+                                            .push(MaterialPageRoute(
                                                 builder: (context) =>
                                                     NewBatchEntry(
                                                         widget.batchId, true, {
@@ -217,6 +218,9 @@ class _BatchEntriesState extends State<BatchEntries> {
                                                           colVisits.docs[index]
                                                               ['photos'],
                                                     })));
+                                        if (response) {
+                                          loadBatchEntries();
+                                        }
                                       }
                                     },
                                     child: Container(

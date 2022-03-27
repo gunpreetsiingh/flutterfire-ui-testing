@@ -54,7 +54,12 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
     }
   }
 
-  void prefill() {
+  void prefill() async {
+    QuerySnapshot colReasons =
+        await FirebaseFirestore.instance.collection('reasons').get();
+    colReasons.docs.forEach((element) {
+      reasons.add(element['reason']);
+    });
     setState(() {
       date = widget.data['date'].toString();
       txtLossQty.text = widget.data['lossQty'].toString();
@@ -107,27 +112,26 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
     });
     if (!loadingAgain) {
       date = DateFormat('yyyy-MM-dd').format(DateTime.now());
-      colEmployee = await FirebaseFirestore.instance
-          .collection('employees')
-          .where('email', isEqualTo: FirebaseAuth.instance.currentUser!.email!)
-          .get();
-      colBatches = await FirebaseFirestore.instance
-          .collection('entries')
-          .where('batch', isEqualTo: widget.batchCode)
-          .get();
     }
+    colEmployee = await FirebaseFirestore.instance
+        .collection('employees')
+        .where('email', isEqualTo: FirebaseAuth.instance.currentUser!.email!)
+        .get();
+    colBatches = await FirebaseFirestore.instance
+        .collection('entries')
+        .where('batch', isEqualTo: widget.batchCode)
+        .get();
     colBatches.docs.forEach((element) {
       if (DateTime.parse(date).isAfter(DateTime.parse(element['date']))) {
         mortalityTillDate += double.parse(element['lossQty']);
       }
     });
-    if (!loadingAgain) {
-      QuerySnapshot colReasons =
-          await FirebaseFirestore.instance.collection('reasons').get();
-      colReasons.docs.forEach((element) {
-        reasons.add(element['reason']);
-      });
-    }
+    reasons.clear();
+    QuerySnapshot colReasons =
+        await FirebaseFirestore.instance.collection('reasons').get();
+    colReasons.docs.forEach((element) {
+      reasons.add(element['reason']);
+    });
     if (isAdmin) {
       eCode = 'E001';
       eName = 'Admin';
@@ -135,9 +139,7 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
       eCode = colEmployee.docs.first['code'];
       eName = colEmployee.docs.first['name'];
     }
-    if (!loadingAgain) {
-      _locationData = await locationObject.getLocation();
-    }
+    _locationData = await locationObject.getLocation();
     location = '${_locationData.latitude}, ${_locationData.longitude}';
     setState(() {
       isLoading = false;
@@ -146,7 +148,7 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
 
   void saveBatchEntry() async {
     bool proceed = true;
-    if (!isAdmin) {
+    if (!widget.edit) {
       QuerySnapshot colTodayEntry = await FirebaseFirestore.instance
           .collection('entries')
           .where('date',
@@ -154,10 +156,12 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
           .get();
       colTodayEntry.docs.forEach((element) {
         if (element['batch'] == widget.batchCode) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            backgroundColor: Colors.red,
-            content: Text('There is already a visit entry for this date.'),
-          ));
+          if (proceed) {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              backgroundColor: Colors.red,
+              content: Text('There is already a visit entry for this date.'),
+            ));
+          }
           setState(() {
             proceed = false;
           });
@@ -165,23 +169,26 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
         }
       });
     }
-    if(proceed || isAdmin) {
-      FirebaseFirestore.instance.collection('entries').doc(widget.edit ? widget.data['code'] : null).set({
-      'batch': widget.batchCode,
-      'employee': eCode + '-' + eName,
-      'location': location,
-      'date': date,
-      'lossQty': txtLossQty.text,
-      'reason': reason,
-      'remarks': txtRemarks.text,
-      'photos': photos,
-      'medicineAdvice': txtMedicineAdvice.text,
-      'feedIntake': txtFeedIntake.text,
-      'weight': txtWeight.text,
-      'mortalityTillDate':
-          (mortalityTillDate + double.parse(txtLossQty.text)).toString(),
-      'feedToOrder': txtFeedToOrder.text,
-    });
+    if (proceed) {
+      FirebaseFirestore.instance
+          .collection('entries')
+          .doc(widget.edit ? widget.data['code'] : null)
+          .set({
+        'batch': widget.batchCode,
+        'employee': eCode + '-' + eName,
+        'location': location,
+        'date': date,
+        'lossQty': txtLossQty.text == '' ? '0' : txtLossQty.text,
+        'reason': reason,
+        'remarks': txtRemarks.text,
+        'photos': photos,
+        'medicineAdvice': txtMedicineAdvice.text,
+        'feedIntake': txtFeedIntake.text == '' ? '0' : txtFeedIntake.text,
+        'weight': txtWeight.text == '' ? '0' : txtWeight.text,
+        'mortalityTillDate':
+            (mortalityTillDate + double.parse(txtLossQty.text)).toString(),
+        'feedToOrder': txtFeedToOrder.text == '' ? '0' : txtFeedToOrder.text,
+      });
     }
     Navigator.of(context).pop(true);
   }
@@ -190,8 +197,8 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Add new batch entry',
+        title: Text(
+          widget.edit ? 'Edit batch entry' : 'Add new batch entry',
         ),
       ),
       floatingActionButton: FloatingActionButton(

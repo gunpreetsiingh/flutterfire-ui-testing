@@ -71,9 +71,15 @@ class _NewBatchState extends State<NewBatch> {
       txtACC.text = widget.batchDataModel.acc!;
       txtAFC.text = widget.batchDataModel.afc!;
       txtCons.text = widget.batchDataModel.cons!;
+      employeeCode = widget.batchDataModel.employee!.substring(0, 4);
       employees.forEach((element) {
-        if (element.startsWith(employeeCode)) {
+        if (element.substring(0, 4) == employeeCode) {
           dropDownValue = element;
+        }
+      });
+      farmers.forEach((element) {
+        if (element.substring(0, 5) == fCode) {
+          farmerDropDownValue = element;
         }
       });
     });
