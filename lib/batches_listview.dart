@@ -222,7 +222,7 @@ class _BatchesListViewState extends State<BatchesListView> {
                   isLoadingTotalValues
                       ? CircularProgressIndicator()
                       : Text(
-                          'Total Feed Intake: ${totalFeedIntake.toStringAsFixed(4)}\nTotal Feed Received: ${totalFeedReceived.toStringAsFixed(4)}\nTotal Mortality Till Date: $totalMortalityTillDate\nWeight: $recentWeight Kg [$recentDateWeight]',
+                          'Total Feed Intake: ${totalFeedIntake.toStringAsFixed(4)}\nTotal Feed Received: ${totalFeedReceived.toStringAsFixed(4)}\nTotal Mortality Till Date: $totalMortalityTillDate\nWeight: $recentWeight grams [$recentDateWeight]',
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,

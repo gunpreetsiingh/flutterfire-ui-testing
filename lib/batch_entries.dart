@@ -152,6 +152,8 @@ class _BatchEntriesState extends State<BatchEntries> {
                                                 builder: (context) =>
                                                     NewBatchEntry(
                                                         widget.batchId, true, {
+                                                      'code': colVisits
+                                                          .docs[index].id,
                                                       'date': colVisits
                                                           .docs[index]['date'],
                                                       'lossQty':

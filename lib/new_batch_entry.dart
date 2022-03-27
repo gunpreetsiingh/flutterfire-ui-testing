@@ -166,7 +166,7 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
       });
     }
     if(proceed || isAdmin) {
-      FirebaseFirestore.instance.collection('entries').doc().set({
+      FirebaseFirestore.instance.collection('entries').doc(widget.edit ? widget.data['code'] : null).set({
       'batch': widget.batchCode,
       'employee': eCode + '-' + eName,
       'location': location,
