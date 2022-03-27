@@ -145,21 +145,28 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
   }
 
   void saveBatchEntry() async {
+    bool proceed = true;
     if (!isAdmin) {
       QuerySnapshot colTodayEntry = await FirebaseFirestore.instance
           .collection('entries')
           .where('date',
               isEqualTo: DateFormat('yyyy-MM-dd').format(DateTime.now()))
           .get();
-      if (colTodayEntry.docs.length == 1) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          backgroundColor: Colors.red,
-          content: Text('There is already a visit entry for this date.'),
-        ));
-        return;
-      }
+      colTodayEntry.docs.forEach((element) {
+        if (element['batch'] == widget.batchCode) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            backgroundColor: Colors.red,
+            content: Text('There is already a visit entry for this date.'),
+          ));
+          setState(() {
+            proceed = false;
+          });
+          return;
+        }
+      });
     }
-    FirebaseFirestore.instance.collection('entries').doc().set({
+    if(proceed || isAdmin) {
+      FirebaseFirestore.instance.collection('entries').doc().set({
       'batch': widget.batchCode,
       'employee': eCode + '-' + eName,
       'location': location,
@@ -175,6 +182,7 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
           (mortalityTillDate + double.parse(txtLossQty.text)).toString(),
       'feedToOrder': txtFeedToOrder.text,
     });
+    }
     Navigator.of(context).pop(true);
   }
 
@@ -367,8 +375,8 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
                     TextField(
                       controller: txtWeight,
                       keyboardType: TextInputType.number,
-                      decoration:
-                          const InputDecoration(labelText: 'Enter weight (Kg)'),
+                      decoration: const InputDecoration(
+                          labelText: 'Enter weight (grams)'),
                     ),
                     const SizedBox(
                       height: 5,
@@ -387,7 +395,8 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
                       controller: txtFeedToOrder,
                       keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
-                          labelText: 'Enter feed to order (Kg)'),
+                          labelText:
+                              'Enter feed received (Kg)'), // feed to order
                     ),
                   ],
                 ),
