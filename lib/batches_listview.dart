@@ -356,11 +356,17 @@ class _BatchesListViewState extends State<BatchesListView> {
                               ]),
                           child: ListTile(
                             onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
                                   builder: (context) => BatchEntries(
-                                      colBatches.docs[index]['code'],
-                                      colBatches.docs[index]['qty'],
-                                      colBatches.docs[index]['fromDate'])));
+                                    colBatches.docs[index]['code'],
+                                    colBatches.docs[index]['qty'],
+                                    colBatches.docs[index]['fromDate'],
+                                    colBatches.docs[index]['farmerName'],
+                                    colBatches.docs[index],
+                                  ),
+                                ),
+                              );
                             },
                             onLongPress: () {
                               setState(() {

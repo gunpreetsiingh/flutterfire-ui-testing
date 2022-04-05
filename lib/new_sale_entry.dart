@@ -43,7 +43,7 @@ class _NewSaleEntryState extends State<NewSaleEntry> {
         .collection('employees')
         .where('email', isEqualTo: FirebaseAuth.instance.currentUser!.email!)
         .get();
-    date = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    date = DateFormat('yyyy-MM-dd hh:mm:ss a').format(DateTime.now());
     if (isAdmin) {
       eCode = 'E001';
       eName = 'Admin';
@@ -115,9 +115,7 @@ class _NewSaleEntryState extends State<NewSaleEntry> {
                             lastDate: DateTime(2100));
                         if (result != null) {
                           setState(() {
-                            date = result
-                                .toString()
-                                .substring(0, result.toString().indexOf(' '));
+                            date = DateFormat('yyyy-MM-dd hh:mm:ss a').format(result);
                           });
                         }
                       },

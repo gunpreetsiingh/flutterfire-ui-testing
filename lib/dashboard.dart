@@ -217,6 +217,13 @@ class _DashboardState extends State<Dashboard> {
         title: const Text('Employee Dashboard'),
         actions: [
           TextButton(
+            onPressed: loadData,
+            child: const Icon(
+              Icons.refresh_outlined,
+              color: Colors.white,
+            ),
+          ),
+          TextButton(
             onPressed: confirmSignOut,
             child: const Icon(
               Icons.logout_outlined,
@@ -289,15 +296,17 @@ class _DashboardState extends State<Dashboard> {
                                   child: ListTile(
                                     onTap: () {
                                       Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  BatchEntries(
-                                                      colBatches.docs[index]
-                                                          ['code'],
-                                                      colBatches.docs[index]
-                                                          ['qty'],
-                                                      colBatches.docs[index]
-                                                          ['fromDate'])));
+                                        MaterialPageRoute(
+                                          builder: (context) => BatchEntries(
+                                            colBatches.docs[index]['code'],
+                                            colBatches.docs[index]['qty'],
+                                            colBatches.docs[index]['fromDate'],
+                                            colBatches.docs[index]
+                                                ['farmerName'],
+                                            colBatches.docs[index],
+                                          ),
+                                        ),
+                                      );
                                     },
                                     title: Column(
                                       mainAxisAlignment:

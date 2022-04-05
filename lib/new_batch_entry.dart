@@ -28,7 +28,7 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
   var txtWeight = TextEditingController();
   var txtFeedToOrder = TextEditingController();
   double mortalityTillDate = 0;
-  bool isLoading = true;
+  bool isLoading = true, isSaving = false;
   String eCode = '', eName = '', location = '', date = '', reason = '';
   List<String> reasons = [], photos = [];
   var picker = ImagePicker(), _imageFile;
@@ -111,7 +111,7 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
       mortalityTillDate = 0;
     });
     if (!loadingAgain) {
-      date = DateFormat('yyyy-MM-dd').format(DateTime.now());
+      date = DateFormat('yyyy-MM-dd hh:mm:ss a').format(DateTime.now());
     }
     colEmployee = await FirebaseFirestore.instance
         .collection('employees')
@@ -147,12 +147,15 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
   }
 
   void saveBatchEntry() async {
+    setState(() {
+      isSaving = true;
+    });
     bool proceed = true;
     if (!widget.edit) {
       QuerySnapshot colTodayEntry = await FirebaseFirestore.instance
           .collection('entries')
           .where('date',
-              isEqualTo: DateFormat('yyyy-MM-dd').format(DateTime.now()))
+              isEqualTo: DateTime.now())
           .get();
       colTodayEntry.docs.forEach((element) {
         if (element['batch'] == widget.batchCode) {
@@ -190,6 +193,9 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
         'feedToOrder': txtFeedToOrder.text == '' ? '0' : txtFeedToOrder.text,
       });
     }
+    setState(() {
+      isSaving = false;
+    });
     Navigator.of(context).pop(true);
   }
 
@@ -203,7 +209,9 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          saveBatchEntry();
+          if(!isSaving) {
+            saveBatchEntry();
+          }
         },
         child: const Icon(
           Icons.done_rounded,
@@ -237,9 +245,8 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
                               lastDate: DateTime(2100));
                           if (result != null) {
                             setState(() {
-                              date = result
-                                  .toString()
-                                  .substring(0, result.toString().indexOf(' '));
+                              date = DateFormat('yyyy-MM-dd hh:mm:ss a')
+                                  .format(result);
                             });
                             setState(() {
                               loadingAgain = true;

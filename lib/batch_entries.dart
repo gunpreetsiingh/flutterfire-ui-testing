@@ -5,8 +5,11 @@ import 'package:flutterfire_ui_testing/new_batch_entry.dart';
 import 'package:flutterfire_ui_testing/new_sale_entry.dart';
 
 class BatchEntries extends StatefulWidget {
-  String batchId, qty, fromDate;
-  BatchEntries(this.batchId, this.qty, this.fromDate, {Key? key})
+  String batchId, qty, fromDate, farmerName;
+  DocumentSnapshot docBatch;
+  BatchEntries(
+      this.batchId, this.qty, this.fromDate, this.farmerName, this.docBatch,
+      {Key? key})
       : super(key: key);
 
   @override
@@ -14,15 +17,25 @@ class BatchEntries extends StatefulWidget {
 }
 
 class _BatchEntriesState extends State<BatchEntries> {
-  bool isLoading = true;
+  bool isLoading = true, isLoadingTotalValues = true;
   late QuerySnapshot colVisits, colSales;
   bool isAdmin =
       FirebaseAuth.instance.currentUser!.email == 'qg.rickfeed@gmail.com';
+
+  double totalFeedIntake = 0,
+      totalFeedReceived = 0,
+      totalMortalityTillDate = 0,
+      recentWeight = 0;
+  String recentDateWeight = '';
+  double sc = 0, ac = 0;
+
+  late QuerySnapshot colEntries;
 
   @override
   void initState() {
     super.initState();
     loadBatchEntries();
+    loadTotalValues();
   }
 
   void loadBatchEntries() async {
@@ -43,6 +56,52 @@ class _BatchEntriesState extends State<BatchEntries> {
         .get();
     setState(() {
       isLoading = false;
+    });
+  }
+
+  void loadTotalValues() async {
+    setState(() {
+      isLoadingTotalValues = true;
+      totalFeedIntake = 0;
+      totalFeedReceived = 0;
+      totalMortalityTillDate = 0;
+      recentWeight = 0;
+      recentDateWeight = '';
+      sc = 0;
+      ac = 0;
+    });
+    colEntries = await FirebaseFirestore.instance
+        .collection('entries')
+        .orderBy('date')
+        .get();
+    colEntries.docs.forEach((element) {
+      if (element['batch'] == widget.batchId) {
+        totalFeedIntake += double.parse(element['feedIntake']);
+        totalFeedReceived += double.parse(element['feedToOrder']);
+        totalMortalityTillDate += double.parse(element['lossQty']);
+        if (element['weight'] != '0') {
+          recentWeight = double.parse(element['weight']) / 1000;
+          recentDateWeight = element['date'];
+        }
+      }
+    });
+    var element = widget.docBatch;
+    sc = (double.parse(element['scc']) * double.parse(element['qty'])) +
+        (double.parse(element['sfc']) * totalFeedIntake);
+    sc = sc /
+        (recentWeight *
+            double.parse(element['cons']) *
+            (double.parse(element['qty']) - totalMortalityTillDate));
+    ac = (double.parse(element['acc']) * double.parse(element['qty'])) +
+        (double.parse(element['afc']) * totalFeedIntake);
+    ac = ac /
+        (recentWeight *
+            double.parse(element['cons']) *
+            (double.parse(element['qty']) - totalMortalityTillDate));
+    sc = sc * 100;
+    ac = ac * 100;
+    setState(() {
+      isLoadingTotalValues = false;
     });
   }
 
@@ -116,7 +175,48 @@ class _BatchEntriesState extends State<BatchEntries> {
               child: DefaultTabController(
                 length: 2,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      color: Colors.black,
+                      padding: const EdgeInsets.all(10),
+                      width: double.infinity,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Batch Code: ${widget.batchId}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Text(
+                            'Farmer Name: ${widget.farmerName}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          isLoadingTotalValues
+                              ? CircularProgressIndicator()
+                              : Text(
+                                  'Total Feed Intake: ${totalFeedIntake.toStringAsFixed(4)}\nTotal Feed Received: ${totalFeedReceived.toStringAsFixed(4)}\nTotal Mortality Till Date: $totalMortalityTillDate\nWeight: $recentWeight Kg [$recentDateWeight]',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     const TabBar(
                       tabs: [
                         Tab(
@@ -134,7 +234,7 @@ class _BatchEntriesState extends State<BatchEntries> {
                       ],
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height - 154,
+                      height: MediaQuery.of(context).size.height - 302,
                       child: TabBarView(
                         children: [
                           Container(
