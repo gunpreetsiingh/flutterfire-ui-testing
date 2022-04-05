@@ -20,6 +20,9 @@ class _ViewImageState extends State<ViewImage> {
       body: Center(
         child: Image.network(
           widget.imageUrl,
+          height: double.infinity,
+          width: double.infinity,
+          fit: BoxFit.contain,
           loadingBuilder: (context, child, loadingProgress) {
             if (loadingProgress == null) return child;
             return const CircularProgressIndicator();

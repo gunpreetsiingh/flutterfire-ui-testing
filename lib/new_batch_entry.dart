@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterfire_ui_testing/view_image.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
@@ -353,13 +354,20 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
                         itemBuilder: (context, index) {
                           return Container(
                             margin: const EdgeInsets.only(right: 10),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Image.network(
-                                photos[index],
-                                fit: BoxFit.cover,
-                                height: 50,
-                                width: 50,
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  ViewImage(photos[index])));
+                              },
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.network(
+                                  photos[index],
+                                  fit: BoxFit.cover,
+                                  height: 50,
+                                  width: 50,
+                                ),
                               ),
                             ),
                           );
