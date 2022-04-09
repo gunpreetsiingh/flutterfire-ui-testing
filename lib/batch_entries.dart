@@ -477,6 +477,17 @@ class _BatchEntriesState extends State<BatchEntries> {
                                               color: Colors.black,
                                             ),
                                           ),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text(
+                                            'Category: ${colSales.docs[index]['category'] ?? '-'}',
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ),

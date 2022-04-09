@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterfire_ui_testing/main.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
@@ -27,7 +28,7 @@ class _NewSaleEntryState extends State<NewSaleEntry> {
   bool isLoading = true;
   bool isAdmin =
       FirebaseAuth.instance.currentUser!.email == 'qg.rickfeed@gmail.com';
-
+  String dropDownValue = '';
   @override
   void initState() {
     // TODO: implement initState
@@ -66,6 +67,7 @@ class _NewSaleEntryState extends State<NewSaleEntry> {
       'purchaser': txtPurchaser.text,
       'employee': '$eCode-$eName',
       'remarks': txtRemarks.text,
+      'category': dropDownValue,
     });
     Navigator.of(context).pop();
   }
@@ -115,7 +117,8 @@ class _NewSaleEntryState extends State<NewSaleEntry> {
                             lastDate: DateTime(2100));
                         if (result != null) {
                           setState(() {
-                            date = DateFormat('yyyy-MM-dd hh:mm:ss a').format(result);
+                            date = DateFormat('yyyy-MM-dd hh:mm:ss a')
+                                .format(result);
                           });
                         }
                       },
@@ -177,6 +180,28 @@ class _NewSaleEntryState extends State<NewSaleEntry> {
                       controller: txtRemarks,
                       decoration:
                           const InputDecoration(labelText: 'Enter remarks'),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    DropdownButton<String>(
+                      hint: const Text('Select category'),
+                      value: dropDownValue == '' ? null : dropDownValue,
+                      isExpanded: true,
+                      icon: const Icon(Icons.arrow_downward),
+                      elevation: 16,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          dropDownValue = newValue!;
+                        });
+                      },
+                      items: categories
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
                     ),
                   ],
                 ),

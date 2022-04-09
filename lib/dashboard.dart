@@ -217,7 +217,9 @@ class _DashboardState extends State<Dashboard> {
         title: const Text('Employee Dashboard'),
         actions: [
           TextButton(
-            onPressed: loadData,
+            onPressed: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Dashboard()));
+            },
             child: const Icon(
               Icons.refresh_outlined,
               color: Colors.white,

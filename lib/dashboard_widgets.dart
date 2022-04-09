@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui_testing/admins.dart';
 import 'package:flutterfire_ui_testing/batches_listview.dart';
+import 'package:flutterfire_ui_testing/categories.dart';
 import 'package:flutterfire_ui_testing/employee_listview.dart';
 import 'package:flutterfire_ui_testing/farmers_listview.dart';
 import 'package:flutterfire_ui_testing/main.dart';
@@ -20,12 +21,14 @@ class _DashboardWidgetsState extends State<DashboardWidgets> {
       colEmployees,
       colBatches,
       colReasons,
-      colAdmins;
+      colAdmins,
+      colCategories;
   int totalFarmers = 0,
       totalEmployees = 0,
       totalBatches = 0,
       totalReasons = 0,
-      totalAdmins = 0;
+      totalAdmins = 0,
+      totalCategories = 0;
   bool loadingData = true;
   @override
   void initState() {
@@ -58,6 +61,10 @@ class _DashboardWidgetsState extends State<DashboardWidgets> {
         .collection('admins')
         .orderBy('email')
         .get();
+    colCategories = await FirebaseFirestore.instance
+        .collection('categories')
+        .orderBy('name')
+        .get();
     // employees.add('Select employee');
     // employeesToken.add('Select employee token');
     farmers.clear();
@@ -80,12 +87,19 @@ class _DashboardWidgetsState extends State<DashboardWidgets> {
         batches.add(element['code'] + '-' + element['name']);
       },
     );
+    categories.clear();
+    colCategories.docs.forEach(
+      (element) {
+        categories.add(element['name']);
+      },
+    );
     setState(() {
       totalFarmers = colFarmers.docs.length;
       totalEmployees = colEmployees.docs.length;
       totalBatches = colBatches.docs.length;
       totalReasons = colReasons.docs.length;
       totalAdmins = colAdmins.docs.length;
+      totalCategories = colCategories.docs.length;
       loadingData = false;
     });
   }
@@ -397,6 +411,69 @@ class _DashboardWidgetsState extends State<DashboardWidgets> {
                         '$totalReasons',
                         style: TextStyle(
                           color: Colors.purple,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (contetx) => Categories()));
+            },
+            child: Container(
+              height: 107,
+              width: 177,
+              padding: const EdgeInsets.all(15),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Colors.pink.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Categories',
+                    style: TextStyle(
+                      color: Colors.pink,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: Colors.pink,
+                              width: 2,
+                            )),
+                        child: const Icon(
+                          Icons.category_outlined,
+                          color: Colors.pink,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        '$totalCategories',
+                        style: TextStyle(
+                          color: Colors.pink,
                           fontSize: 30,
                           fontWeight: FontWeight.bold,
                         ),

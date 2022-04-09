@@ -123,7 +123,8 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
         .where('batch', isEqualTo: widget.batchCode)
         .get();
     colBatches.docs.forEach((element) {
-      if (DateTime.parse(date).isAfter(DateTime.parse(element['date']))) {
+      if (DateTime.parse(date.substring(0, 10))
+          .isAfter(DateTime.parse(element['date'].substring(0, 10)))) {
         mortalityTillDate += double.parse(element['lossQty']);
       }
     });
@@ -140,8 +141,12 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
       eCode = colEmployee.docs.first['code'];
       eName = colEmployee.docs.first['name'];
     }
-    _locationData = await locationObject.getLocation();
-    location = '${_locationData.latitude}, ${_locationData.longitude}';
+    try {
+      _locationData = await locationObject.getLocation();
+      location = '${_locationData.latitude}, ${_locationData.longitude}';
+    } catch (e) {
+      location = '0, 0';
+    }
     setState(() {
       isLoading = false;
     });
@@ -155,8 +160,7 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
     if (!widget.edit) {
       QuerySnapshot colTodayEntry = await FirebaseFirestore.instance
           .collection('entries')
-          .where('date',
-              isEqualTo: DateTime.now())
+          .where('date', isEqualTo: DateTime.now())
           .get();
       colTodayEntry.docs.forEach((element) {
         if (element['batch'] == widget.batchCode) {
@@ -210,7 +214,7 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          if(!isSaving) {
+          if (!isSaving) {
             saveBatchEntry();
           }
         },
@@ -357,8 +361,8 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
                             child: GestureDetector(
                               onTap: () {
                                 Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) =>
-                                  ViewImage(photos[index])));
+                                    builder: (context) =>
+                                        ViewImage(photos[index])));
                               },
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),

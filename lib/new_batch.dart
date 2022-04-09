@@ -99,7 +99,7 @@ class _NewBatchState extends State<NewBatch> {
           ? DateFormat('yyyy-MM-dd')
               .format(DateTime.now().add(const Duration(days: 46)))
           : txtEndingDate,
-      'employee': employeeCode,
+      'employee': dropDownValue,
       'scc': txtSCC.text == '' ? '0' : txtSCC.text,
       'sfc': txtSFC.text == '' ? '0' : txtSFC.text,
       'acc': txtACC.text == '' ? '0' : txtACC.text,

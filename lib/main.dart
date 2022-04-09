@@ -7,6 +7,7 @@ List<String> employees = [];
 List<String> employeesToken = [];
 List<String> farmers = [];
 List<String> batches = [];
+List<String> categories = [];
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
