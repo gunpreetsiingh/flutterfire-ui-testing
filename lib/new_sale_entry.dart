@@ -11,8 +11,22 @@ import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 
 class NewSaleEntry extends StatefulWidget {
-  String batchCode;
-  NewSaleEntry(this.batchCode, {Key? key}) : super(key: key);
+  bool update;
+  String docId, batchCode;
+  String? date, salesNos, sales, dcNo, purchaser, employee, remarks, category;
+  NewSaleEntry({
+    required this.update,
+    required this.docId,
+    required this.batchCode,
+    this.date,
+    this.salesNos,
+    this.sales,
+    this.dcNo,
+    this.purchaser,
+    this.employee,
+    this.remarks,
+    this.category,
+  });
 
   @override
   State<NewSaleEntry> createState() => _NewSaleEntryState();
@@ -52,13 +66,33 @@ class _NewSaleEntryState extends State<NewSaleEntry> {
       eCode = colEmployee.docs.first['code'];
       eName = colEmployee.docs.first['name'];
     }
+    if (widget.update) {
+      prepare();
+    }
     setState(() {
       isLoading = false;
     });
   }
 
+  void prepare() {
+    setState(() {
+      date = widget.date!;
+      txtSalesNos.text = widget.salesNos!;
+      txtSales.text = widget.sales!;
+      txtDcNo.text = widget.dcNo!;
+      txtPurchaser.text = widget.purchaser!;
+      eCode = widget.employee!.substring(0, 4);
+      eName = widget.employee!.substring(5, widget.employee!.length);
+      txtRemarks.text = widget.remarks!;
+      dropDownValue = widget.category!;
+    });
+  }
+
   void saveSalesEntry() {
-    FirebaseFirestore.instance.collection('sales').doc().set({
+    FirebaseFirestore.instance
+        .collection('sales')
+        .doc(widget.update ? widget.docId : null)
+        .set({
       'batch': widget.batchCode,
       'date': date,
       'salesNos': txtSalesNos.text,
@@ -69,7 +103,7 @@ class _NewSaleEntryState extends State<NewSaleEntry> {
       'remarks': txtRemarks.text,
       'category': dropDownValue,
     });
-    Navigator.of(context).pop();
+    Navigator.of(context).pop(true);
   }
 
   @override

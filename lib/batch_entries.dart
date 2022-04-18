@@ -146,7 +146,8 @@ class _BatchEntriesState extends State<BatchEntries> {
             backgroundColor: Colors.green,
             onPressed: () async {
               var response = await Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => NewSaleEntry(widget.batchId)));
+                  builder: (context) => NewSaleEntry(
+                      update: false, docId: '', batchCode: widget.batchId)));
               if (response) {
                 loadBatchEntries();
               }
@@ -402,93 +403,125 @@ class _BatchEntriesState extends State<BatchEntries> {
                                 itemBuilder: (context, index) {
                                   if (colSales.docs[index]['batch'] !=
                                       widget.batchId) return Container();
-                                  return Container(
-                                    margin: const EdgeInsets.only(top: 10),
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 5),
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(10),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.grey.withOpacity(0.15),
-                                            blurRadius: 5,
-                                            spreadRadius: 5,
-                                          )
-                                        ]),
-                                    child: ListTile(
-                                      title: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            'Date: ${colSales.docs[index]['date']}',
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black,
+                                  return GestureDetector(
+                                    onTap: () async {
+                                      var response =
+                                          await Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) => NewSaleEntry(
+                                            update: true,
+                                            docId: colSales.docs[index].id,
+                                            batchCode: widget.batchId,
+                                            date: colSales.docs[index]['date'],
+                                            salesNos: colSales.docs[index]
+                                                ['salesNos'],
+                                            sales: colSales.docs[index]
+                                                ['sales'],
+                                            dcNo: colSales.docs[index]['dcNo'],
+                                            purchaser: colSales.docs[index]
+                                                ['purchaser'],
+                                            employee: colSales.docs[index]
+                                                ['employee'],
+                                            remarks: colSales.docs[index]
+                                                ['remarks'],
+                                            category: colSales.docs[index]
+                                                ['category'],
+                                          ),
+                                        ),
+                                      );
+                                      if (response) {
+                                        loadBatchEntries();
+                                      }
+                                    },
+                                    child: Container(
+                                      margin: const EdgeInsets.only(top: 10),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 5),
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.grey.withOpacity(0.15),
+                                              blurRadius: 5,
+                                              spreadRadius: 5,
+                                            )
+                                          ]),
+                                      child: ListTile(
+                                        title: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              'Date: ${colSales.docs[index]['date']}',
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
                                             ),
-                                          ),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text(
-                                            'Sales Nos: ${colSales.docs[index]['salesNos']}',
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black,
+                                            const SizedBox(
+                                              height: 5,
                                             ),
-                                          ),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text(
-                                            'Sales: ${colSales.docs[index]['sales']}',
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black,
+                                            Text(
+                                              'Sales Nos: ${colSales.docs[index]['salesNos']}',
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
                                             ),
-                                          ),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text(
-                                            'DC No: ${colSales.docs[index]['dcNo']}',
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black,
+                                            const SizedBox(
+                                              height: 5,
                                             ),
-                                          ),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text(
-                                            'Purchaser: ${colSales.docs[index]['purchaser']}',
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black,
+                                            Text(
+                                              'Sales: ${colSales.docs[index]['sales']}',
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
                                             ),
-                                          ),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text(
-                                            'Category: ${colSales.docs[index]['category'] ?? '-'}',
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black,
+                                            const SizedBox(
+                                              height: 5,
                                             ),
-                                          ),
-                                        ],
+                                            Text(
+                                              'DC No: ${colSales.docs[index]['dcNo']}',
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            Text(
+                                              'Purchaser: ${colSales.docs[index]['purchaser']}',
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            Text(
+                                              'Category: ${colSales.docs[index]['category'] ?? '-'}',
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   );

@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui_testing/batch_entries.dart';
 import 'package:flutterfire_ui_testing/farmer_data_model.dart';
+import 'package:flutterfire_ui_testing/main.dart';
 import 'package:flutterfire_ui_testing/new_farmer.dart';
 import 'package:flutterfire_ui_testing/view_image.dart';
 import 'package:image_picker/image_picker.dart';
@@ -30,7 +31,7 @@ class _DashboardState extends State<Dashboard> {
   var txtReason = TextEditingController();
   String tokenId = '', code = '';
   bool isLoading = true, showError = false;
-  late QuerySnapshot colBatches, colEmployee, colEmployees;
+  late QuerySnapshot colBatches, colEmployee, colEmployees, colCategories;
   String imageUrl = '', employeeCode = '';
 
   final FirebaseStorage _storage = FirebaseStorage.instance;
@@ -65,6 +66,16 @@ class _DashboardState extends State<Dashboard> {
         .collection('batches')
         .orderBy('farmerName')
         .get();
+    colCategories = await FirebaseFirestore.instance
+        .collection('categories')
+        .orderBy('name')
+        .get();
+    categories.clear();
+    colCategories.docs.forEach(
+      (element) {
+        categories.add(element['name']);
+      },
+    );
     setState(() {
       employeeCode = colEmployee.docs.first['code'];
       if (colEmployee.docs.first['activated']) {
