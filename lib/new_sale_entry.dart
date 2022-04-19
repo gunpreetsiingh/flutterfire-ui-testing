@@ -141,19 +141,22 @@ class _NewSaleEntryState extends State<NewSaleEntry> {
                     ),
                     GestureDetector(
                       onTap: () async {
-                        var result = await showDatePicker(
-                            context: context,
-                            initialDate: DateTime.parse(
-                                date == 'Enter ending date'
-                                    ? DateTime.now().toString()
-                                    : date),
-                            firstDate: DateTime(2000),
-                            lastDate: DateTime(2100));
-                        if (result != null) {
-                          setState(() {
-                            date = DateFormat('yyyy-MM-dd hh:mm:ss a')
-                                .format(result);
-                          });
+                        if (isAdmin) {
+                          var result = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.parse(date == ''
+                                  ? DateTime.now().toString()
+                                  : date.substring(0, date.indexOf(' '))),
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime(2100));
+                          if (result != null) {
+                            setState(() {
+                              date = DateFormat('yyyy-MM-dd').format(result) +
+                                  ' ' +
+                                  DateFormat('hh:mm:ss a')
+                                      .format(DateTime.now());
+                            });
+                          }
                         }
                       },
                       child: Text(
