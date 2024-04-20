@@ -28,23 +28,23 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   change_app_package_name: ^1.0.0
-  cloud_firestore: ^3.1.8
+  cloud_firestore: ^4.17.0
   cupertino_icons: ^1.0.2
-  firebase_auth: ^3.3.6
-  firebase_core: ^1.12.0
+  firebase_auth: ^4.19.2
+  firebase_core: ^2.30.0
   flutter:
     sdk: flutter
-  flutterfire_ui: ^0.3.2
+  flutterfire_ui: ^0.4.3+20
   google_sign_in: ^5.2.3
-  onesignal_flutter: ^3.2.8
-  firebase_storage: ^10.2.7
-  image_picker: ^0.8.4+8
-  multiselect: ^0.0.4
-  location: ^4.3.0
-  excel: ^2.0.0-null-safety-3
+  onesignal_flutter: ^5.1.5
+  firebase_storage: ^11.7.2
+  image_picker: ^1.1.0
+  multiselect: ^0.1.0
+  location: ^6.0.1
+  excel: ^4.0.3
 
 dev_dependencies:
-  flutter_lints: ^1.0.0
+  flutter_lints: ^3.0.2
   flutter_test:
     sdk: flutter
 

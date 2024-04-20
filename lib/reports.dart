@@ -38,26 +38,26 @@ class _ReportsState extends State<Reports> {
       'IFSC Code',
       'Notes'
     ];
-    sheetObject.appendRow(data);
+    sheetObject.appendRow(data.map((e) => TextCellValue(e)).toList());
     int c = 1;
     colFarmers.docs.forEach((element) {
       List<String> data = [
         c.toString(),
-        element['code'],
-        element['name'],
-        element['number'],
-        element['email'],
-        element['location'],
-        element['panNo'],
-        element['panId'],
-        element['aadhaarNo'],
-        element['aadhaarId'],
-        element['bankAccNumber'],
-        element['bankName'],
-        element['bankIfscCode'],
-        element['notes'],
+        element['code'].toString(),
+        element['name'].toString(),
+        element['number'].toString(),
+        element['email'].toString(),
+        element['location'].toString(),
+        element['panNo'].toString(),
+        element['panId'].toString(),
+        element['aadhaarNo'].toString(),
+        element['aadhaarId'].toString(),
+        element['bankAccNumber'].toString(),
+        element['bankName'].toString(),
+        element['bankIfscCode'].toString(),
+        element['notes'].toString(),
       ];
-      sheetObject.appendRow(data);
+      sheetObject.appendRow(data.map((e) => TextCellValue(e)).toList());
       c++;
     });
     var fileBytes = excel.save(fileName: "Rickfeed-Farmers.xlsx");
@@ -85,19 +85,19 @@ class _ReportsState extends State<Reports> {
       'Image',
       'Activated?',
     ];
-    sheetObject.appendRow(data);
+    sheetObject.appendRow(data.map((e) => TextCellValue(e)).toList());
     int c = 1;
     colEmployees.docs.forEach((element) {
       List<String> data = [
         c.toString(),
-        element['code'],
-        element['name'],
-        element['number'],
-        element['email'],
-        element['image'],
+        element['code'].toString(),
+        element['name'].toString(),
+        element['number'].toString(),
+        element['email'].toString(),
+        element['image'].toString(),
         element['activated'].toString(),
       ];
-      sheetObject.appendRow(data);
+      sheetObject.appendRow(data.map((e) => TextCellValue(e)).toList());
       c++;
     });
     var fileBytes = excel.save(fileName: "Rickfeed-Employees.xlsx");
@@ -131,25 +131,25 @@ class _ReportsState extends State<Reports> {
       'AFC',
       'Cons (%)',
     ];
-    sheetObject.appendRow(data);
+    sheetObject.appendRow(data.map((e) => TextCellValue(e)).toList());
     int c = 1;
     colBatches.docs.forEach((element) {
       List<String> data = [
         c.toString(),
-        element['code'],
-        element['name'],
-        element['farmerName'],
-        element['qty'],
-        element['fromDate'],
-        element['endingDate'],
-        element['employee'],
-        element['scc'],
-        element['sfc'],
-        element['acc'],
-        element['afc'],
-        element['cons'],
+        element['code'].toString(),
+        element['name'].toString(),
+        element['farmerName'].toString(),
+        element['qty'].toString(),
+        element['fromDate'].toString(),
+        element['endingDate'].toString(),
+        element['employee'].toString(),
+        element['scc'].toString(),
+        element['sfc'].toString(),
+        element['acc'].toString(),
+        element['afc'].toString(),
+        element['cons'].toString(),
       ];
-      sheetObject.appendRow(data);
+      sheetObject.appendRow(data.map((e) => TextCellValue(e)).toList());
       c++;
     });
     var fileBytes = excel.save(fileName: "Rickfeed-Batches.xlsx");
@@ -184,26 +184,26 @@ class _ReportsState extends State<Reports> {
       'Mortality Till Date',
       'Feed To Order',
     ];
-    sheetObject.appendRow(data);
+    sheetObject.appendRow(data.map((e) => TextCellValue(e)).toList());
     int c = 1;
     colBatches.docs.forEach((element) {
       List<String> data = [
         c.toString(),
-        element['batch'],
-        element['employee'],
-        element['location'],
-        element['date'],
-        element['lossQty'],
-        element['reason'],
-        element['remarks'],
+        element['batch'].toString(),
+        element['employee'].toString(),
+        element['location'].toString(),
+        element['date'].toString(),
+        element['lossQty'].toString(),
+        element['reason'].toString(),
+        element['remarks'].toString(),
         element['photos'].toString().replaceAll('[]', '').replaceAll(']', ''),
-        element['medicineAdvice'],
-        element['feedIntake'],
-        element['weight'],
-        element['mortalityTillDate'],
-        element['feedToOrder'],
+        element['medicineAdvice'].toString(),
+        element['feedIntake'].toString(),
+        element['weight'].toString(),
+        element['mortalityTillDate'].toString(),
+        element['feedToOrder'].toString(),
       ];
-      sheetObject.appendRow(data);
+      sheetObject.appendRow(data.map((e) => TextCellValue(e)).toList());
       c++;
     });
     var fileBytes = excel.save(fileName: "Rickfeed-Visits.xlsx");
@@ -233,21 +233,21 @@ class _ReportsState extends State<Reports> {
       'Employee',
       'Remarks',
     ];
-    sheetObject.appendRow(data);
+    sheetObject.appendRow(data.map((e) => TextCellValue(e)).toList());
     int c = 1;
     colBatches.docs.forEach((element) {
       List<String> data = [
         c.toString(),
-        element['batch'],
-        element['date'],
-        element['salesNos'],
-        element['sales'],
-        element['dcNo'],
-        element['purchaser'],
-        element['employee'],
-        element['remarks'],
+        element['batch'].toString(),
+        element['date'].toString(),
+        element['salesNos'].toString(),
+        element['sales'].toString(),
+        element['dcNo'].toString(),
+        element['purchaser'].toString(),
+        element['employee'].toString(),
+        element['remarks'].toString(),
       ];
-      sheetObject.appendRow(data);
+      sheetObject.appendRow(data.map((e) => TextCellValue(e)).toList());
       c++;
     });
     var fileBytes = excel.save(fileName: "Rickfeed-Sales.xlsx");
@@ -266,55 +266,57 @@ class _ReportsState extends State<Reports> {
         padding: const EdgeInsets.all(15),
         alignment: Alignment.topCenter,
         child: isLoading
-        ? const CircularProgressIndicator(color: Colors.blue,)
-        : Wrap(
-          alignment: WrapAlignment.center,
-          runAlignment: WrapAlignment.center,
-          spacing: 15,
-          runSpacing: 15,
-          children: [
-            TextButton(
-              onPressed: () {
-                if (!isLoading) {
-                  exportFarmers();
-                }
-              },
-              child: const Text('Export Farmers'),
-            ),
-            TextButton(
-              onPressed: () {
-                if (!isLoading) {
-                  exportEmployees();
-                }
-              },
-              child: const Text('Export Employees'),
-            ),
-            TextButton(
-              onPressed: () {
-                if (!isLoading) {
-                  exportBatches();
-                }
-              },
-              child: const Text('Export Batches'),
-            ),
-            TextButton(
-              onPressed: () {
-                if (!isLoading) {
-                  exportVisits();
-                }
-              },
-              child: const Text('Export Visits'),
-            ),
-            TextButton(
-              onPressed: () {
-                if (!isLoading) {
-                  exportSales();
-                }
-              },
-              child: const Text('Export Sales'),
-            ),
-          ],
-        ),
+            ? const CircularProgressIndicator(
+                color: Colors.blue,
+              )
+            : Wrap(
+                alignment: WrapAlignment.center,
+                runAlignment: WrapAlignment.center,
+                spacing: 15,
+                runSpacing: 15,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      if (!isLoading) {
+                        exportFarmers();
+                      }
+                    },
+                    child: const Text('Export Farmers'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      if (!isLoading) {
+                        exportEmployees();
+                      }
+                    },
+                    child: const Text('Export Employees'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      if (!isLoading) {
+                        exportBatches();
+                      }
+                    },
+                    child: const Text('Export Batches'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      if (!isLoading) {
+                        exportVisits();
+                      }
+                    },
+                    child: const Text('Export Visits'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      if (!isLoading) {
+                        exportSales();
+                      }
+                    },
+                    child: const Text('Export Sales'),
+                  ),
+                ],
+              ),
       ),
     );
   }

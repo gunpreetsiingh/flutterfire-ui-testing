@@ -113,8 +113,7 @@ class _DashboardState extends State<Dashboard> {
     await loadExistingEmployees();
     if (!kIsWeb) {
       if (Platform.isAndroid) {
-        var status = await OneSignal.shared.getDeviceState();
-        tokenId = status!.userId!;
+        tokenId = OneSignal.User.pushSubscription.token.toString();
       }
     }
     if (FirebaseAuth.instance.currentUser!.displayName == null ||
@@ -229,7 +228,8 @@ class _DashboardState extends State<Dashboard> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Dashboard()));
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => Dashboard()));
             },
             child: const Icon(
               Icons.refresh_outlined,
