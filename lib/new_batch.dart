@@ -72,16 +72,16 @@ class _NewBatchState extends State<NewBatch> {
       txtAFC.text = widget.batchDataModel.afc!;
       txtCons.text = widget.batchDataModel.cons!;
       employeeCode = widget.batchDataModel.employee!.substring(0, 4);
-      employees.forEach((element) {
+      for (var element in employees) {
         if (element.substring(0, 4) == employeeCode) {
           dropDownValue = element;
         }
-      });
-      farmers.forEach((element) {
+      }
+      for (var element in farmers) {
         if (element.substring(0, 5) == fCode) {
           farmerDropDownValue = element;
         }
-      });
+      }
     });
   }
 
@@ -208,13 +208,14 @@ class _NewBatchState extends State<NewBatch> {
                   }
                 },
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  padding: const EdgeInsets.symmetric(vertical: 5),
                   child: Text(
                     txtFromDate,
                     style: const TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22),
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 22,
+                    ),
                   ),
                 ),
               ),
@@ -240,7 +241,7 @@ class _NewBatchState extends State<NewBatch> {
                   }
                 },
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  padding: const EdgeInsets.symmetric(vertical: 5),
                   child: Text(
                     txtEndingDate,
                     style: const TextStyle(
@@ -283,9 +284,10 @@ class _NewBatchState extends State<NewBatch> {
                 controller: txtSCC,
                 enabled: isAdmin,
                 style: const TextStyle(
-                    fontWeight: FontWeight.w400,
-                    color: Colors.black,
-                    fontSize: 22),
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black,
+                  fontSize: 22,
+                ),
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(labelText: 'Enter SCC'),
               ),

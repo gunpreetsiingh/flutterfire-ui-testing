@@ -159,8 +159,11 @@ class _NewSaleEntryState extends State<NewSaleEntry> {
                           }
                         }
                       },
-                      child: Text(
-                        'Date: $date',
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: Text(
+                          'Date: $date',
+                        ),
                       ),
                     ),
                     const SizedBox(
@@ -213,10 +216,14 @@ class _NewSaleEntryState extends State<NewSaleEntry> {
                     const SizedBox(
                       height: 5,
                     ),
-                    TextField(
-                      controller: txtRemarks,
-                      decoration:
-                          const InputDecoration(labelText: 'Enter remarks'),
+                    SizedBox(
+                      height: 100,
+                      child: TextField(
+                        controller: txtRemarks,
+                        maxLines: 10,
+                        decoration:
+                            const InputDecoration(labelText: 'Enter remarks'),
+                      ),
                     ),
                     const SizedBox(
                       height: 5,

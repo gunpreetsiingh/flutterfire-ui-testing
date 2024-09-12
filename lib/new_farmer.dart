@@ -178,6 +178,9 @@ class _NewFarmerState extends State<NewFarmer> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
+              const SizedBox(
+                height: 10,
+              ),
               CircleAvatar(
                 radius: 50,
                 backgroundImage: const AssetImage('assets/profile.jpeg'),
@@ -316,9 +319,13 @@ class _NewFarmerState extends State<NewFarmer> {
                 enabled: isAdmin,
                 decoration: const InputDecoration(labelText: 'Bank IFSC code'),
               ),
-              TextField(
-                controller: txtNotes,
-                decoration: const InputDecoration(labelText: 'Notes'),
+              SizedBox(
+                height: 100,
+                child: TextField(
+                  controller: txtNotes,
+                  decoration: const InputDecoration(labelText: 'Notes'),
+                  maxLines: 10,
+                ),
               ),
               const SizedBox(
                 height: 100,

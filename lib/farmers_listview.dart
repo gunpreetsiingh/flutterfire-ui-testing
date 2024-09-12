@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui_testing/farmer_data_model.dart';
-import 'package:flutterfire_ui_testing/main.dart';
 import 'package:flutterfire_ui_testing/new_farmer.dart';
 import 'package:flutterfire_ui_testing/view_image.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
+// import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:intl/intl.dart';
 
 class FarmersListView extends StatefulWidget {

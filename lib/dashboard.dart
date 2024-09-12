@@ -13,7 +13,7 @@ import 'package:flutterfire_ui_testing/new_farmer.dart';
 import 'package:flutterfire_ui_testing/view_image.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:location/location.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
+// import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:intl/intl.dart';
 
 class Dashboard extends StatefulWidget {
@@ -111,11 +111,11 @@ class _DashboardState extends State<Dashboard> {
   void checkName() async {
     await Future.delayed(Duration.zero);
     await loadExistingEmployees();
-    if (!kIsWeb) {
-      if (Platform.isAndroid) {
-        tokenId = OneSignal.User.pushSubscription.token.toString();
-      }
-    }
+    // if (!kIsWeb) {
+    //   if (Platform.isAndroid) {
+    //     tokenId = OneSignal.User.pushSubscription.token.toString();
+    //   }
+    // }
     if (FirebaseAuth.instance.currentUser!.displayName == null ||
         FirebaseAuth.instance.currentUser!.displayName!.trim() == '') {
       confirmName();

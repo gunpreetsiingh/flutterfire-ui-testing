@@ -260,11 +260,14 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
                           }
                         }
                       },
-                      child: Text(
-                        'Date: $date',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: Text(
+                          'Date: $date',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
                         ),
                       ),
                     ),
@@ -273,7 +276,7 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
                     ),
                     Text(
                       'Employee Code: $eCode',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
@@ -283,7 +286,7 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
                     ),
                     Text(
                       'Employee Name: $eName',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
@@ -293,7 +296,7 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
                     ),
                     Text(
                       'Location: $location',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
@@ -304,8 +307,9 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
                     TextField(
                       controller: txtLossQty,
                       keyboardType: TextInputType.number,
-                      decoration:
-                          const InputDecoration(labelText: 'Enter loss qty'),
+                      decoration: const InputDecoration(
+                        labelText: 'Enter loss qty',
+                      ),
                     ),
                     const SizedBox(
                       height: 5,
@@ -321,21 +325,27 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
                           reason = newValue!;
                         });
                       },
-                      items:
-                          reasons.map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
+                      items: reasons.map<DropdownMenuItem<String>>(
+                        (String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        },
+                      ).toList(),
                     ),
                     const SizedBox(
                       height: 5,
                     ),
-                    TextField(
-                      controller: txtRemarks,
-                      decoration:
-                          const InputDecoration(labelText: 'Enter remarks'),
+                    SizedBox(
+                      height: 200,
+                      child: TextField(
+                        controller: txtRemarks,
+                        decoration: const InputDecoration(
+                          labelText: 'Enter remarks',
+                        ),
+                        maxLines: 10,
+                      ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -343,8 +353,9 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
                       children: [
                         const Text('Photos'),
                         IconButton(
-                            onPressed: pickImage,
-                            icon: const Icon(Icons.add_a_photo_outlined))
+                          onPressed: pickImage,
+                          icon: const Icon(Icons.add_a_photo_outlined),
+                        )
                       ],
                     ),
                     const SizedBox(
@@ -409,7 +420,7 @@ class _NewBatchEntryState extends State<NewBatchEntry> {
                     ),
                     Text(
                       'Mortality Till Date: $mortalityTillDate',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
