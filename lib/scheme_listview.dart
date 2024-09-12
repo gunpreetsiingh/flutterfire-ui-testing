@@ -2,14 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui_testing/farmer_data_model.dart';
 import 'package:flutterfire_ui_testing/new_farmer.dart';
+import 'package:flutterfire_ui_testing/new_scheme_entry.dart';
 import 'package:flutterfire_ui_testing/scheme_data_model.dart';
 import 'package:flutterfire_ui_testing/view_image.dart';
 // import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:intl/intl.dart';
 
 class SchemeListView extends StatefulWidget {
-  bool unattended;
-  SchemeListView(this.unattended, {Key? key}) : super(key: key);
+  const SchemeListView({Key? key}) : super(key: key);
 
   @override
   _SchemeListViewState createState() => _SchemeListViewState();
@@ -31,7 +31,7 @@ class _SchemeListViewState extends State<SchemeListView> {
       isLoading = true;
     });
     colSchemes = await FirebaseFirestore.instance
-        .collection('scheme')
+        .collection('schemes')
         .orderBy('name')
         .get();
     setState(() {
@@ -61,7 +61,53 @@ class _SchemeListViewState extends State<SchemeListView> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
-              children: [],
+              children: [
+                Text(
+                  'ID: ${listScheme[index].id}',
+                ),
+                Text(
+                  'Name: ${listScheme[index].name}',
+                ),
+                Text(
+                  'Branch Applicability: ${listScheme[index].branchApplicability}',
+                ),
+                Text(
+                  'Basis: ${listScheme[index].basis}',
+                ),
+                Text(
+                  'STD Market Incentive Over: ${listScheme[index].stdMarketIncentiveOver}',
+                ),
+                Text(
+                  'STD Market Incentive Rate: ${listScheme[index].stdMarketIncentiveRate}',
+                ),
+                Text(
+                  'Market Incentive Scheme: ${listScheme[index].marketIncentiveScheme}',
+                ),
+                Text(
+                  'Applicable From: ${listScheme[index].applicableFrom}',
+                ),
+                Text(
+                  'Applicable To: ${listScheme[index].applicableTo}',
+                ),
+                Text(
+                  'SCR (Chicks): ${listScheme[index].scrChicks}',
+                ),
+                Text(
+                  'SFR (Feed): ${listScheme[index].sfrFeed}',
+                ),
+                Text(
+                  'STD Cost: ${listScheme[index].stdCost}',
+                ),
+                Text(
+                  'STD Rate: ${listScheme[index].stdRate}',
+                ),
+                Text(
+                  'Medicine Included: ${listScheme[index].medicineIncluded}',
+                ),
+                Text(
+                  'Vaccine Included: ${listScheme[index].vaccineIncluded}',
+                ),
+              ],
             ),
           ),
         );
@@ -74,11 +120,25 @@ class _SchemeListViewState extends State<SchemeListView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Scheme List',
+          'Schemes',
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {},
+        backgroundColor: Colors.brown,
+        onPressed: () async {
+          if (!isLoading) {
+            var response = await Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => NewSchemeEntry(
+                  schemeDataModel: null,
+                ),
+              ),
+            );
+            if (response) {
+              loadData();
+            }
+          }
+        },
         child: const Icon(
           Icons.add_rounded,
           color: Colors.white,
@@ -125,6 +185,9 @@ class _SchemeListViewState extends State<SchemeListView> {
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
+                          ),
+                          subtitle: Text(
+                            '${DateFormat('dd-MM-yyyy').format(listScheme[index].applicableFrom!.toDate())} to ${DateFormat('dd-MM-yyyy').format(listScheme[index].applicableTo!.toDate())}',
                           ),
                           trailing: const Icon(
                             Icons.arrow_forward_ios_rounded,

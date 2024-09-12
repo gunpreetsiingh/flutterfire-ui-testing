@@ -92,7 +92,15 @@ class _DashboardAdminState extends State<DashboardAdmin> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Admin Dashboard'),
+        title: const Text(
+          'Admin Dashboard',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: Colors.blue,
         actions: [
           IconButton(
             onPressed: () {
@@ -122,7 +130,7 @@ class _DashboardAdminState extends State<DashboardAdmin> {
             children: [
               const SizedBox(height: 10),
               Text(
-                'Welcome ${FirebaseAuth.instance.currentUser!.displayName!}!',
+                'Welcome ${FirebaseAuth.instance.currentUser!.email}!',
                 style: const TextStyle(
                   color: Colors.blue,
                   fontWeight: FontWeight.bold,
@@ -132,7 +140,7 @@ class _DashboardAdminState extends State<DashboardAdmin> {
               const SizedBox(
                 height: 10,
               ),
-              DashboardWidgets()
+              const DashboardWidgets()
             ],
           ),
         ),

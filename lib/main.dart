@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutterfire_ui_testing/auth_gate.dart';
 import 'package:flutterfire_ui_testing/firebase_options.dart';
 import 'package:flutterfire_ui_testing/gc/gc_report_view.dart';
+import 'package:flutterfire_ui_testing/new_scheme_entry.dart';
 // import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 List<String> employees = [];
@@ -32,9 +33,11 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: GcReportView(), // AuthGate(),
+      home: NewSchemeEntry(
+        schemeDataModel: null,
+      ), // AuthGate(),
     );
   }
 }

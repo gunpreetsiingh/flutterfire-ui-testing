@@ -1,6 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterfire_ui_testing/constants.dart';
 import 'package:flutterfire_ui_testing/main.dart';
 import 'package:flutterfire_ui_testing/scheme_data_model.dart';
 import 'package:intl/intl.dart';
@@ -28,7 +31,7 @@ class _NewSchemeEntryState extends State<NewSchemeEntry> {
   var txtStdCost = TextEditingController();
   var txtStdRate = TextEditingController();
   String id = '';
-  bool isLoading = true, medicineIncluded = false, vaccineIncluded = false;
+  bool isLoading = false, medicineIncluded = false, vaccineIncluded = false;
   String dropDownValue = '';
   Timestamp applicableFrom = Timestamp.now(), applicableTo = Timestamp.now();
 
@@ -70,7 +73,23 @@ class _NewSchemeEntryState extends State<NewSchemeEntry> {
 
   void saveUpdateScheme() async {
     await FirebaseFirestore.instance.collection('schemes').doc(id).set(
-          SchemeDataModel().toJson(SchemeDataModel()),
+          SchemeDataModel().toJson(SchemeDataModel(
+            id: id,
+            name: txtName.text,
+            branchApplicability: txtBranchApplicability.text,
+            basis: txtBasis.text,
+            stdMarketIncentiveOver: txtStdMarketIncentiveOver.text,
+            stdMarketIncentiveRate: txtStdMarketIncentiveRate.text,
+            marketIncentiveScheme: txtMarketIncentiveScheme.text,
+            applicableFrom: applicableFrom,
+            applicableTo: applicableTo,
+            scrChicks: Constants.stringToDouble(txtScrChicks.text),
+            sfrFeed: Constants.stringToDouble(txtSfrFeed.text),
+            stdCost: Constants.stringToDouble(txtStdCost.text),
+            stdRate: Constants.stringToDouble(txtStdRate.text),
+            medicineIncluded: medicineIncluded,
+            vaccineIncluded: vaccineIncluded,
+          )),
           SetOptions(merge: true),
         );
     Navigator.of(context).pop(true);
@@ -85,6 +104,7 @@ class _NewSchemeEntryState extends State<NewSchemeEntry> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.brown,
         onPressed: () {
           saveUpdateScheme();
         },
@@ -114,6 +134,7 @@ class _NewSchemeEntryState extends State<NewSchemeEntry> {
                       height: 5,
                     ),
                     TextField(
+                      autofocus: true,
                       controller: txtName,
                       keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
@@ -139,7 +160,7 @@ class _NewSchemeEntryState extends State<NewSchemeEntry> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 5),
                         child: Text(
-                          'Date: ${DateFormat('dd-MM-yyyy').format(applicableFrom.toDate())}',
+                          'Applicable From: ${DateFormat('dd-MM-yyyy').format(applicableFrom.toDate())}',
                         ),
                       ),
                     ),
@@ -162,7 +183,7 @@ class _NewSchemeEntryState extends State<NewSchemeEntry> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 5),
                         child: Text(
-                          'Date: ${DateFormat('dd-MM-yyyy').format(applicableTo.toDate())}',
+                          'Applicable To: ${DateFormat('dd-MM-yyyy').format(applicableTo.toDate())}',
                         ),
                       ),
                     ),
@@ -220,6 +241,7 @@ class _NewSchemeEntryState extends State<NewSchemeEntry> {
                     ),
                     CheckboxListTile(
                       value: medicineIncluded,
+                      controlAffinity: ListTileControlAffinity.leading,
                       title: const Text('Medicine Included'),
                       onChanged: (value) {
                         setState(() {
@@ -232,6 +254,7 @@ class _NewSchemeEntryState extends State<NewSchemeEntry> {
                     ),
                     CheckboxListTile(
                       value: vaccineIncluded,
+                      controlAffinity: ListTileControlAffinity.leading,
                       title: const Text('Vaccine Included'),
                       onChanged: (value) {
                         setState(() {
@@ -279,7 +302,7 @@ class _NewSchemeEntryState extends State<NewSchemeEntry> {
                       ),
                     ),
                     const SizedBox(
-                      height: 50,
+                      height: 200,
                     ),
                   ],
                 ),

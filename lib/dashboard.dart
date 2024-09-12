@@ -120,7 +120,7 @@ class _DashboardState extends State<Dashboard> {
         FirebaseAuth.instance.currentUser!.displayName!.trim() == '') {
       confirmName();
     } else {
-      loadData();
+      // loadData();
     }
   }
 

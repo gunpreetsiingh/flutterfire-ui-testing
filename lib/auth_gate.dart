@@ -1,7 +1,9 @@
+// ignore_for_file: curly_braces_in_flow_control_structures
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui_testing/dashboard.dart';
 import 'package:flutterfire_ui_testing/dashboard_admin.dart';
 
@@ -46,11 +48,7 @@ class _AuthGateState extends State<AuthGate> {
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
-                return const SignInScreen(
-                  providerConfigs: [
-                    EmailProviderConfiguration(),
-                  ],
-                );
+                return SignInScreen(providers: [EmailAuthProvider()]);
               }
               if (listAdminEmails
                   .contains(FirebaseAuth.instance.currentUser!.email))

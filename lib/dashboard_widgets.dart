@@ -8,6 +8,7 @@ import 'package:flutterfire_ui_testing/farmers_listview.dart';
 import 'package:flutterfire_ui_testing/main.dart';
 import 'package:flutterfire_ui_testing/reasons.dart';
 import 'package:flutterfire_ui_testing/reports.dart';
+import 'package:flutterfire_ui_testing/scheme_listview.dart';
 
 class DashboardWidgets extends StatefulWidget {
   const DashboardWidgets({Key? key}) : super(key: key);
@@ -20,12 +21,14 @@ class _DashboardWidgetsState extends State<DashboardWidgets> {
   late QuerySnapshot colFarmers,
       colEmployees,
       colBatches,
+      colSchemes,
       colReasons,
       colAdmins,
       colCategories;
   int totalFarmers = 0,
       totalEmployees = 0,
       totalBatches = 0,
+      totalSchemes = 0,
       totalReasons = 0,
       totalAdmins = 0,
       totalCategories = 0;
@@ -51,6 +54,10 @@ class _DashboardWidgetsState extends State<DashboardWidgets> {
         .get();
     colBatches = await FirebaseFirestore.instance
         .collection('batches')
+        .orderBy('name')
+        .get();
+    colSchemes = await FirebaseFirestore.instance
+        .collection('schemes')
         .orderBy('name')
         .get();
     colReasons = await FirebaseFirestore.instance
@@ -97,6 +104,7 @@ class _DashboardWidgetsState extends State<DashboardWidgets> {
       totalFarmers = colFarmers.docs.length;
       totalEmployees = colEmployees.docs.length;
       totalBatches = colBatches.docs.length;
+      totalSchemes = colSchemes.docs.length;
       totalReasons = colReasons.docs.length;
       totalAdmins = colAdmins.docs.length;
       totalCategories = colCategories.docs.length;
@@ -123,7 +131,7 @@ class _DashboardWidgetsState extends State<DashboardWidgets> {
                   builder: (contetx) => FarmersListView(false)));
             },
             child: Container(
-              height: 107,
+              height: 112,
               width: 177,
               padding: const EdgeInsets.all(15),
               alignment: Alignment.center,
@@ -186,7 +194,7 @@ class _DashboardWidgetsState extends State<DashboardWidgets> {
                   MaterialPageRoute(builder: (contetx) => EmployeeListView()));
             },
             child: Container(
-              height: 107,
+              height: 112,
               width: 177,
               padding: const EdgeInsets.all(15),
               alignment: Alignment.center,
@@ -249,7 +257,7 @@ class _DashboardWidgetsState extends State<DashboardWidgets> {
                   MaterialPageRoute(builder: (contetx) => BatchesListView()));
             },
             child: Container(
-              height: 107,
+              height: 112,
               width: 177,
               padding: const EdgeInsets.all(15),
               alignment: Alignment.center,
@@ -294,7 +302,7 @@ class _DashboardWidgetsState extends State<DashboardWidgets> {
                       ),
                       Text(
                         '$totalBatches',
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.blue,
                           fontSize: 30,
                           fontWeight: FontWeight.bold,
@@ -308,11 +316,12 @@ class _DashboardWidgetsState extends State<DashboardWidgets> {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (contetx) => Reports()));
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (contetx) => const Reports()),
+              );
             },
             child: Container(
-              height: 107,
+              height: 112,
               width: 177,
               padding: const EdgeInsets.all(15),
               alignment: Alignment.center,
@@ -342,14 +351,91 @@ class _DashboardWidgetsState extends State<DashboardWidgets> {
                       Container(
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              color: Colors.red,
-                              width: 2,
-                            )),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: Colors.red,
+                            width: 2,
+                          ),
+                        ),
                         child: const Icon(
                           Icons.analytics_outlined,
                           color: Colors.red,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      const Text(
+                        '-',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (contetx) => const SchemeListView()),
+              );
+            },
+            child: Container(
+              height: 112,
+              width: 177,
+              padding: const EdgeInsets.all(15),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Colors.brown.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Schemes',
+                    style: TextStyle(
+                      color: Colors.brown,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: Colors.brown,
+                            width: 2,
+                          ),
+                        ),
+                        child: const Icon(
+                          Icons.article_outlined,
+                          color: Colors.brown,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        '$totalSchemes',
+                        style: const TextStyle(
+                          color: Colors.brown,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
@@ -364,7 +450,7 @@ class _DashboardWidgetsState extends State<DashboardWidgets> {
                   .push(MaterialPageRoute(builder: (contetx) => Reasons()));
             },
             child: Container(
-              height: 107,
+              height: 112,
               width: 177,
               padding: const EdgeInsets.all(15),
               alignment: Alignment.center,
@@ -427,7 +513,7 @@ class _DashboardWidgetsState extends State<DashboardWidgets> {
                   .push(MaterialPageRoute(builder: (contetx) => Categories()));
             },
             child: Container(
-              height: 107,
+              height: 112,
               width: 177,
               padding: const EdgeInsets.all(15),
               alignment: Alignment.center,
@@ -490,7 +576,7 @@ class _DashboardWidgetsState extends State<DashboardWidgets> {
                   .push(MaterialPageRoute(builder: (contetx) => Admins()));
             },
             child: Container(
-              height: 107,
+              height: 112,
               width: 177,
               padding: const EdgeInsets.all(15),
               alignment: Alignment.center,
